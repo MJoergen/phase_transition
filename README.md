@@ -11,7 +11,7 @@ This project is inspired by these two videoes:
 
 # What can you do?
 
-* (TODO) There is a small application in Ruby that you can run.
+* There is a small application in Ruby that you can run.
 * (TODO) There is a larger implementation for FPGA that displays on a VGA output.
 
 # Theory
@@ -33,7 +33,7 @@ N = \sum_i s_i
 ```
 
 ```math
-E = \sum_{i,j neighbors} -s_i*s_j
+E = -\sum_{i,j \,\, neighbors} s_i \cdot s_j
 ```
 
 In other words, the number $N$ simply counts the number of molecules currently in the system, while the energy $E$ is more
@@ -92,7 +92,7 @@ it depends on the chemical potential $C$ and the temperature $T$, and we can the
 $\Omega$ can be calculated from the normalization property as:
 
 ```math
-\Omega(C, T) = -T \log \sum \exp(-H/T)
+\Omega(C, T) = -T \, \log \sum \exp(-H/T)
 ```
 
 where the sum is over all possible states of the system.
@@ -101,6 +101,8 @@ Properties of the grand potential $\Omega$:
 
 ```math
 N = -d\Omega/dC
+```
+```math
 S = -d\Omega/dT
 ```
 
@@ -113,13 +115,13 @@ d\Omega = -S dT - N dC
 The average energy is
 
 ```math
-<E> = \Omega + <N> C + ST
+\<E\> = \Omega + \<N\> C + ST
 ```
 
 i.e.
 
 ```math
-d<E> = T dS + C dN
+d\<E\> = T dS + C dN
 ```
 
 Furthermore, the grand partition function $Z$ is related to the grand potential $\Omega$ via:
@@ -139,6 +141,6 @@ The discontinuity is in $C$.
 TBD: How to calculate entropy S from the probability distribution?
 
 ```math
-S = average(-log probability)
+S = average(-\log Probability)
 ```
 
