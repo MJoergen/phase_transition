@@ -1,6 +1,8 @@
 library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
+  use ieee.fixed_float_types.all;
+  use ieee.fixed_pkg.all;
 
 -- This implements the Boltzmann distribution from the Grand canonical ensemble.
 -- P(X) = P_0 * exp(-1/T * E(X) + C/T * N(X)).
@@ -42,10 +44,11 @@ entity calc_prob is
   port (
     clk_i              : in    std_logic;
     rst_i              : in    std_logic;
-    coef_e_i           : in    signed(G_ACCURACY - 1 downto 0);
-    coef_n_i           : in    signed(G_ACCURACY - 1 downto 0);
+    coef_e_i           : in    ufixed(-1 downto -G_ACCURACY);
+    coef_n_i           : in    ufixed(1 downto -G_ACCURACY);
     neighbor_cnt_i     : in    natural range 0 to 4;
     cell_i             : in    std_logic;
+    valid_i            : in    std_logic;
     prob_numerator_o   : out   std_logic_vector(G_ACCURACY - 1 downto 0);
     prob_denominator_o : out   std_logic_vector(G_ACCURACY - 1 downto 0)
   );
@@ -83,45 +86,48 @@ architecture synthesis of calc_prob is
   pure function calc_lnq (
     neighbor_cnt : natural range 0 to 4;
     cell         : std_logic;
-    coef_e       : signed(G_ACCURACY - 1 downto 0);
-    coef_n       : signed(G_ACCURACY - 1 downto 0)
-  ) return signed is
+    coef_e       : ufixed(-1 downto -G_ACCURACY);
+    coef_n       : ufixed(1 downto -G_ACCURACY)
+  ) return sfixed is
     variable energy_gain_v : integer range -4 to 4;
     variable number_gain_v : integer range -1 to 1;
-    variable res_v         : signed(4 + G_ACCURACY - 1 downto 0);
+    variable res_v         : sfixed(4 downto -G_ACCURACY);
+    variable res2_v        : sfixed(5 downto -G_ACCURACY);
   begin
     energy_gain_v := energy_gain(neighbor_cnt, cell);
     number_gain_v := number_gain(neighbor_cnt, cell);
 
-    res_v := to_signed(energy_gain_v, 4) * coef_e;
+    res_v         := to_sfixed(energy_gain_v, 3, 0) * to_sfixed(coef_e);
 
     if number_gain_v = 1 then
-      res_v := res_v + coef_n;
+      res2_v := res_v + to_sfixed(coef_n);
     else
-      res_v := res_v - coef_n;
+      res2_v := res_v - to_sfixed(coef_n);
     end if;
 
-    return res_v;
+    return res2_v;
   end function calc_lnq;
 
   signal   rom_addr : std_logic_vector(C_ADDR_SIZE - 1 downto 0);
   signal   rom_data : std_logic_vector(C_DATA_SIZE - 1 downto 0);
 
-  signal   lnq : signed(4 + G_ACCURACY - 1 downto 0);
+  signal   lnq : sfixed(5 downto -G_ACCURACY);
 
 begin
 
   calc_proc : process (clk_i)
   begin
     if rising_edge(clk_i) then
-      lnq <= calc_lnq(neighbor_cnt_i,
-                      cell_i,
-                      coef_e_i,
-                      coef_n_i);
+      if valid_i = '1' then
+        lnq <= calc_lnq(neighbor_cnt_i,
+                        cell_i,
+                        coef_e_i,
+                        coef_n_i);
+      end if;
     end if;
   end process calc_proc;
 
-  rom_addr <= std_logic_vector(lnq(4 + G_ACCURACY - 1 downto 4));
+  rom_addr <= to_stdlogicvector(lnq(4 downto 5 - C_ADDR_SIZE));
 
   exp_rom_inst : entity work.exp_rom
     generic map (

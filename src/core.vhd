@@ -1,6 +1,8 @@
 library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
+  use ieee.fixed_float_types.all;
+  use ieee.fixed_pkg.all;
 
 entity core is
   generic (
@@ -9,15 +11,15 @@ entity core is
     G_GRID_SIZE : natural
   );
   port (
-    clk_i         : in    std_logic;
-    rst_i         : in    std_logic;
-    step_i        : in    std_logic;
-    temperature_i : in    std_logic_vector(G_ACCURACY - 1 downto 0);
-    chem_pot_i    : in    std_logic_vector(G_ACCURACY - 1 downto 0);
-    ram_addr_o    : out   std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
-    ram_wr_data_o : out   std_logic;
-    ram_rd_data_i : in    std_logic;
-    ram_wr_en_o   : out   std_logic
+    clk_i          : in    std_logic;
+    rst_i          : in    std_logic;
+    step_i         : in    std_logic;
+    temperature_i  : in    ufixed(-1 downto -G_ACCURACY);
+    neg_chem_pot_i : in    ufixed(1 downto -G_ACCURACY);
+    ram_addr_o     : out   std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
+    ram_wr_data_o  : out   std_logic;
+    ram_rd_data_i  : in    std_logic;
+    ram_wr_en_o    : out   std_logic
   );
 end entity core;
 
@@ -33,6 +35,7 @@ architecture synthesis of core is
 
   signal neighbor_cnt       : natural range 0 to 4;
   signal cell               : std_logic;
+  signal valid              : std_logic;
   signal prob_numerator     : std_logic_vector(G_ACCURACY - 1 downto 0);
   signal prob_denominator   : std_logic_vector(G_ACCURACY - 1 downto 0);
   signal prob_numerator_d   : std_logic_vector(G_ACCURACY - 1 downto 0);
@@ -86,6 +89,7 @@ begin
   begin
     if rising_edge(clk_i) then
       ram_wr_en_o <= '0';
+      valid       <= '0';
 
       case state is
 
@@ -169,6 +173,7 @@ begin
           if ram_rd_data_i = '1' then
             neighbor_cnt <= neighbor_cnt + 1;
           end if;
+          valid <= '1';
           state <= STEP7_ST;
 
         when STEP7_ST =>
@@ -224,10 +229,11 @@ begin
     port map (
       clk_i              => clk_i,
       rst_i              => rst_i,
-      coef_e_i           => signed(temperature_i),
-      coef_n_i           => signed(chem_pot_i),
+      coef_e_i           => temperature_i,
+      coef_n_i           => neg_chem_pot_i,
       neighbor_cnt_i     => neighbor_cnt,
       cell_i             => cell,
+      valid_i            => valid,
       prob_numerator_o   => prob_numerator,
       prob_denominator_o => prob_denominator
     ); -- calc_prob_inst : entity work.calc_prob

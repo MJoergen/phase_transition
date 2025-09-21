@@ -1,6 +1,8 @@
 library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
+  use ieee.fixed_float_types.all;
+  use ieee.fixed_pkg.all;
 
 entity tb_core is
   generic (
@@ -12,15 +14,23 @@ end entity tb_core;
 
 architecture simulation of tb_core is
 
-  signal running     : std_logic                                 := '1';
-  signal clk         : std_logic                                 := '1';
-  signal rst         : std_logic                                 := '1';
-  signal temperature : std_logic_vector(G_ACCURACY - 1 downto 0) := x"8765";
-  signal chem_pot    : std_logic_vector(G_ACCURACY - 1 downto 0) := x"1234";
-  signal ram_addr    : std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
-  signal ram_wr_data : std_logic;
-  signal ram_rd_data : std_logic;
-  signal ram_wr_en   : std_logic;
+  constant C_INITIAL_TEMPERATURE : real                := 0.3;
+  constant C_INITIAL_CHEM_POT    : real                := -2.5;
+
+  signal   running : std_logic                         := '1';
+  signal   clk     : std_logic                         := '1';
+  signal   rst     : std_logic                         := '1';
+
+  -- Temperature is limited to [0, 1[
+  signal   temperature : ufixed(-1 downto -G_ACCURACY) := to_ufixed(C_INITIAL_TEMPERATURE, -1, -G_ACCURACY);
+
+  -- Chemical Potential is limited to ]-4, 0]. The sign is discarded (it's implicit).
+  signal   neg_chem_pot : ufixed(1 downto -G_ACCURACY) := to_ufixed(-C_INITIAL_CHEM_POT, 1, -G_ACCURACY);
+
+  signal   ram_addr    : std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
+  signal   ram_wr_data : std_logic;
+  signal   ram_rd_data : std_logic;
+  signal   ram_wr_en   : std_logic;
 
 begin
 
@@ -34,15 +44,15 @@ begin
       G_GRID_SIZE => G_GRID_SIZE
     )
     port map (
-      clk_i         => clk,
-      rst_i         => rst,
-      step_i        => '1',
-      temperature_i => temperature,
-      chem_pot_i    => chem_pot,
-      ram_addr_o    => ram_addr,
-      ram_wr_data_o => ram_wr_data,
-      ram_rd_data_i => ram_rd_data,
-      ram_wr_en_o   => ram_wr_en
+      clk_i          => clk,
+      rst_i          => rst,
+      step_i         => '1',
+      temperature_i  => temperature,
+      neg_chem_pot_i => neg_chem_pot,
+      ram_addr_o     => ram_addr,
+      ram_wr_data_o  => ram_wr_data,
+      ram_rd_data_i  => ram_rd_data,
+      ram_wr_en_o    => ram_wr_en
     ); -- core_inst : entity work.core
 
   tdp_ram_inst : entity work.tdp_ram

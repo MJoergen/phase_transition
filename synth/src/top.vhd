@@ -1,6 +1,8 @@
 library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
+  use ieee.fixed_float_types.all;
+  use ieee.fixed_pkg.all;
 
 library unisim;
   use unisim.vcomponents.all;
@@ -39,25 +41,28 @@ end entity top;
 
 architecture synthesis of top is
 
-  -- Temperature is limited to the range [0, 1].
-  -- Chemical Potential is in the range [-4, 0].
-  --   Note: Only the absolute value is stored, i.e. in the range [0, 4]
+  -- Temperature is limited to the range [0, 1[.
+  -- Chemical Potential is in the range ]-4, 0].
+  --   Note: Only the absolute value is stored, i.e. in the range [0, 4[
+  constant C_INITIAL_TEMPERATURE : real                      := 0.3;
+  constant C_INITIAL_CHEM_POT    : real                      := -2.5;
 
-  signal core_clk         : std_logic;
-  signal core_rst         : std_logic;
-  signal core_temperature : std_logic_vector(G_ACCURACY - 1 downto 0);
-  signal core_chem_pot    : std_logic_vector(G_ACCURACY + 2 - 1 downto 0);
-  signal core_ram_addr    : std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
-  signal core_ram_wr_data : std_logic;
-  signal core_ram_rd_data : std_logic;
-  signal core_ram_wr_en   : std_logic;
-  signal core_step        : std_logic;
+  signal   core_clk          : std_logic;
+  signal   core_rst          : std_logic;
+  signal   core_temperature  : ufixed(-1 downto -G_ACCURACY) := to_ufixed(C_INITIAL_TEMPERATURE, -1, -G_ACCURACY);
+  signal   core_neg_chem_pot : ufixed(1 downto -G_ACCURACY)  := to_ufixed(-C_INITIAL_CHEM_POT, 1, -G_ACCURACY);
+  signal   core_ram_addr     : std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
+  signal   core_ram_wr_data  : std_logic;
+  signal   core_ram_rd_data  : std_logic;
+  signal   core_ram_wr_en    : std_logic;
+  signal   core_step         : std_logic;
 
-  signal vga_clk         : std_logic;
-  signal vga_rst         : std_logic;
-  signal vga_ram_addr    : std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
-  signal vga_ram_rd_data : std_logic;
-  signal vga_step        : std_logic;
+  signal   vga_clk         : std_logic;
+  signal   vga_rst         : std_logic;
+  signal   vga_ram_addr    : std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
+  signal   vga_ram_rd_data : std_logic;
+  signal   vga_step        : std_logic;
+
 
 begin
 
@@ -87,15 +92,15 @@ begin
       G_GRID_SIZE => G_GRID_SIZE
     )
     port map (
-      clk_i         => core_clk,
-      rst_i         => core_rst,
-      step_i        => core_step,
-      temperature_i => core_temperature,
-      chem_pot_i    => core_chem_pot,
-      ram_addr_o    => core_ram_addr,
-      ram_wr_data_o => core_ram_wr_data,
-      ram_rd_data_i => core_ram_rd_data,
-      ram_wr_en_o   => core_ram_wr_en
+      clk_i          => core_clk,
+      rst_i          => core_rst,
+      step_i         => core_step,
+      temperature_i  => core_temperature,
+      neg_chem_pot_i => core_neg_chem_pot,
+      ram_addr_o     => core_ram_addr,
+      ram_wr_data_o  => core_ram_wr_data,
+      ram_rd_data_i  => core_ram_rd_data,
+      ram_wr_en_o    => core_ram_wr_en
     ); -- core_inst : entity work.core
 
 
