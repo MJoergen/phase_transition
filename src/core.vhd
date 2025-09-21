@@ -39,10 +39,10 @@ architecture synthesis of core is
   signal neighbor_cnt       : natural range 0 to 4;
   signal cell               : std_logic;
   signal valid              : std_logic;
-  signal prob_numerator     : ufixed(2 downto -G_ACCURACY);
-  signal prob_denominator   : ufixed(2 downto -G_ACCURACY);
-  signal prob_numerator_d   : ufixed(2 downto -G_ACCURACY);
-  signal prob_denominator_d : ufixed(2 downto -G_ACCURACY);
+  signal prob_numerator     : ufixed(3 downto -G_ACCURACY);
+  signal prob_denominator   : ufixed(3 downto -G_ACCURACY);
+  signal prob_numerator_d   : ufixed(3 downto -G_ACCURACY);
+  signal prob_denominator_d : ufixed(3 downto -G_ACCURACY);
 
   signal rand_output : std_logic_vector(63 downto 0);
   signal random_d    : ufixed(-1 downto -G_ACCURACY);
@@ -78,8 +78,8 @@ begin
   state_proc : process (clk_i)
     variable new_pos_x_v : unsigned(G_ADDR_BITS - 1 downto 0);
     variable new_pos_y_v : unsigned(G_ADDR_BITS - 1 downto 0);
-    variable rand_x_v : ufixed(-1 downto -G_ADDR_BITS);
-    variable rand_y_v : ufixed(-1 downto -G_ADDR_BITS);
+    variable rand_x_v    : ufixed(-1 downto -G_ADDR_BITS);
+    variable rand_y_v    : ufixed(-1 downto -G_ADDR_BITS);
   begin
     if rising_edge(clk_i) then
       ram_wr_en_o <= '0';
@@ -90,12 +90,12 @@ begin
         when IDLE_ST =>
           if step_i = '1' then
             -- Get two random values in the range [0, 1[.
-            rand_x_v := to_ufixed(rand_output(G_ADDR_BITS + 40 - 1 downto 40), rand_x_v);
-            rand_y_v := to_ufixed(rand_output(G_ADDR_BITS + 20 - 1 downto 20), rand_y_v);
+            rand_x_v     := to_ufixed(rand_output(G_ADDR_BITS + 40 - 1 downto 40), rand_x_v);
+            rand_y_v     := to_ufixed(rand_output(G_ADDR_BITS + 20 - 1 downto 20), rand_y_v);
 
             -- Find random site
-            new_pos_x_v := unsigned(resize(rand_x_v * to_ufixed(G_GRID_SIZE, G_ADDR_BITS-1, 0), G_ADDR_BITS-1, 0));
-            new_pos_y_v := unsigned(resize(rand_y_v * to_ufixed(G_GRID_SIZE, G_ADDR_BITS-1, 0), G_ADDR_BITS-1, 0));
+            new_pos_x_v  := unsigned(resize(rand_x_v * to_ufixed(G_GRID_SIZE, G_ADDR_BITS - 1, 0), G_ADDR_BITS - 1, 0));
+            new_pos_y_v  := unsigned(resize(rand_y_v * to_ufixed(G_GRID_SIZE, G_ADDR_BITS - 1, 0), G_ADDR_BITS - 1, 0));
 
             pos_x        <= new_pos_x_v;
             pos_y        <= new_pos_y_v;
@@ -174,13 +174,13 @@ begin
           state <= STEP7_ST;
 
         when STEP7_ST =>
-          random_d           <= to_ufixed(rand_output(31 downto 16), random_d);
+          random_d           <= to_ufixed(rand_output(31 downto 32 - G_ACCURACY), random_d);
           prob_numerator_d   <= prob_numerator;
           prob_denominator_d <= prob_denominator;
           state              <= STEP8_ST;
 
         when STEP8_ST =>
-          mult  <= resize(random_d*prob_numerator_d, mult);
+          mult  <= resize(random_d * prob_numerator_d, mult);
           state <= STEP9_ST;
 
         when STEP9_ST =>
@@ -202,8 +202,10 @@ begin
       end case;
 
       if rst_i = '1' then
-        state <= INIT_ST;
-        cnt   <= 10;
+        state       <= INIT_ST;
+        cnt         <= 10;
+        ram_addr_o  <= (others => '0');
+        ram_wr_en_o <= '0';
       end if;
     end if;
   end process state_proc;

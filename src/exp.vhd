@@ -6,7 +6,11 @@
 -- * Second cycle is a shift.
 -- Both 'arg' and 'res' are in fixed point notation:
 -- * 'arg' ranges from [-4; 4[.
--- * 'res' ranges from [0; 8[.
+-- * 'res' ranges from [0; 16[.
+--
+-- 'arg' is split into an integer part 'i' and a fractional part 'f', so that 'arg' = 'i' + 'f'.
+-- Then 2^arg = 2^i * 2^f. Here multiplying by 2^i is a simple binary shift operation, and 2^f is
+-- achieved by a table lookup.
 
 library ieee;
   use ieee.std_logic_1164.all;
@@ -21,7 +25,7 @@ entity exp is
   port (
     clk_i : in    std_logic;
     arg_i : in    sfixed(2 downto -G_ACCURACY);
-    res_o : out   ufixed(2 downto -G_ACCURACY)
+    res_o : out   ufixed(3 downto -G_ACCURACY)
   );
 end entity exp;
 
@@ -30,7 +34,7 @@ architecture synthesis of exp is
   constant C_ADDR_SIZE : natural := G_ACCURACY;
   constant C_DATA_SIZE : natural := G_ACCURACY;
 
-  signal   shift : natural range 0 to 7;
+  signal   shift : integer range -4 to 3;
 
   signal   addr : std_logic_vector(C_ADDR_SIZE - 1 downto 0);
   signal   data : std_logic_vector(C_DATA_SIZE - 1 downto 0);
@@ -39,9 +43,11 @@ begin
 
   ------------------------------------
   -- First cycle: Table lookup
+  -- The address represents a number in the range [0. 1[.
+  -- The data represents a number in the range [0, 1[.
   ------------------------------------
 
-  addr <= std_logic_vector(arg_i(-1 downto -G_ACCURACY));
+  addr <= to_slv(arg_i(-1 downto -G_ACCURACY));
 
   exp_rom_inst : entity work.exp_rom
     generic map (
@@ -57,7 +63,7 @@ begin
   first_proc : process (clk_i)
   begin
     if rising_edge(clk_i) then
-      shift <= to_integer(unsigned(arg_i(2 downto 0)));
+      shift <= to_integer(signed(arg_i(2 downto 0)));
     end if;
   end process first_proc;
 
@@ -72,11 +78,32 @@ begin
 
       case shift is
 
+        when -4 =>
+          res_o <= to_ufixed("00000001" & data(C_DATA_SIZE-1 downto 4), res_o);
+
+        when -3 =>
+          res_o <= to_ufixed("0000001" & data(C_DATA_SIZE-1 downto 3), res_o);
+
+        when -2 =>
+          res_o <= to_ufixed("000001" & data(C_DATA_SIZE-1 downto 2), res_o);
+
+        when -1 =>
+          res_o <= to_ufixed("00001" & data(C_DATA_SIZE-1 downto 1), res_o);
+
         when 0 =>
-          res_o <= to_ufixed(data, 2, -G_ACCURACY);
+          res_o <= to_ufixed("0001" & data, res_o);
+
+        when 1 =>
+          res_o <= to_ufixed("001" & data & "0", res_o);
+
+        when 2 =>
+          res_o <= to_ufixed("01" & data & "00", res_o);
+
+        when 3 =>
+          res_o <= to_ufixed("1" & data & "000", res_o);
 
         when others =>
-          null;
+          assert false;
 
       end case;
 

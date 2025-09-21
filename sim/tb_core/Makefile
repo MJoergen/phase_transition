@@ -19,7 +19,7 @@ STOP_TIME = 500ns
 # Test specific generics
 GENERIC += -gG_GRID_SIZE=8
 GENERIC += -gG_ADDR_BITS=4
-GENERIC += -gG_ACCURACY=16
+GENERIC += -gG_ACCURACY=4
 
-include Makefile.inc
+include ../Makefile.inc
 

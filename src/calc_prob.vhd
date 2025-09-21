@@ -49,8 +49,8 @@ entity calc_prob is
     neighbor_cnt_i     : in    natural range 0 to 4;
     cell_i             : in    std_logic;
     valid_i            : in    std_logic;
-    prob_numerator_o   : out   ufixed(2 downto -G_ACCURACY);
-    prob_denominator_o : out   ufixed(2 downto -G_ACCURACY)
+    prob_numerator_o   : out   ufixed(3 downto -G_ACCURACY);
+    prob_denominator_o : out   ufixed(3 downto -G_ACCURACY)
   );
 end entity calc_prob;
 
@@ -108,10 +108,10 @@ architecture synthesis of calc_prob is
     return res2_v;
   end function calc_lnq;
 
-  signal   lnq : sfixed(5 downto -G_ACCURACY);
+  signal   lnq : sfixed(5 downto -G_ACCURACY) := (others => '0');
 
   signal   exp_arg : sfixed(4 downto 2 - G_ACCURACY);
-  signal   exp_res : ufixed(4 downto 2 - G_ACCURACY);
+  signal   exp_res : ufixed(5 downto 2 - G_ACCURACY);
 
 begin
 

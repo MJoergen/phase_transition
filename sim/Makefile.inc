@@ -33,8 +33,8 @@ RUN_OPTIONS += --ieee-asserts=disable-at-0
 RUN_OPTIONS += --assert-level=$(ASSERT_LEVEL)
 
 # Source file directories
-PLATFORM_SRC_DIR = ../synth/src
-SRC_DIR = ../src
+PLATFORM_SRC_DIR = ../../synth/src
+SRC_DIR = ../../src
 SIM_SRC_DIR = src
 
 # Default target: Run the test

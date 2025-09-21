@@ -2,13 +2,15 @@
 -- License: Public domain; do with it what you like :-)
 --
 -- Description: This module performs a table lookup to calculate the
--- exp function.
+-- function 2^x.
+--
+-- The address represents a number in the range [0, 1[.
+-- The data represents a number in the range [0, 1[.
 --
 -- The input is interpreted as a value between 0 and 1.
 -- The output is a value between 0 and 1.
 --
--- The actual function calculated is y = 0.5^x - 1.
--- The MSB of exp_o will always be 1.
+-- The actual function calculated is y = 2^x - 1.
 --
 -- Latency is 1 clock cycle.
 
@@ -31,30 +33,29 @@ end entity exp_rom;
 
 architecture synthesis of exp_rom is
 
-  constant C_SIZE : natural := 2 ** G_ADDR_SIZE;
+  constant C_SCALE_X : natural := 2 ** G_ADDR_SIZE;
+  constant C_SCALE_Y : natural := 2 ** G_DATA_SIZE;
 
-  type     mem_type is array (0 to C_SIZE - 1) of std_logic_vector(G_DATA_SIZE - 1 downto 0);
+  type     mem_type is array (0 to C_SCALE_X - 1) of std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
   impure function initrom return mem_type is
-    constant C_SCALE_X : real     := real(C_SIZE);
-    constant C_SCALE_Y : real     := 2048.0;
-    variable x_v       : real;
-    variable y_v       : real;
-    variable int_v     : integer;
-    variable rom_v     : mem_type := (others => (others => '0'));
+    variable x_v   : real;
+    variable y_v   : real;
+    variable int_v : integer;
+    variable rom_v : mem_type;
   begin
     --
-    for i in 0 to C_SIZE - 1 loop
-      x_v      := real(i + 1) / C_SCALE_X;  -- Adding one ensures the exp is never one.
-      y_v      := exp(x_v * log(0.5));
-      int_v    := integer(y_v * C_SCALE_Y); -- Rounding is automatic.
+    for i in 0 to C_SCALE_X - 1 loop
+      x_v      := real(i) / real(C_SCALE_X);
+      y_v      := exp(x_v * log(2.0)) - 1.0;
+      int_v    := integer(floor(y_v * real(C_SCALE_Y))); -- Rounding is automatic.
       rom_v(i) := to_stdlogicvector(int_v, G_DATA_SIZE);
     end loop;
 
     return rom_v;
   end function initrom;
 
-  signal   mem : mem_type   := initrom;
+  signal   mem : mem_type      := initrom;
 
 begin
 
