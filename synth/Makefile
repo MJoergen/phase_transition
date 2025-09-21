@@ -2,6 +2,7 @@
 SRC += $(SRC_DIR)/calc_prob.vhd
 SRC += $(SRC_DIR)/core.vhd
 SRC += $(SRC_DIR)/exp_rom.vhd
+SRC += $(SRC_DIR)/exp.vhd
 SRC += $(SRC_DIR)/lfsr.vhd
 SRC += $(SRC_DIR)/random.vhd
 

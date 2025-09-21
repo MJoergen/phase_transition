@@ -14,8 +14,8 @@ entity core is
     clk_i          : in    std_logic;
     rst_i          : in    std_logic;
     step_i         : in    std_logic;
-    temperature_i  : in    ufixed(-1 downto -G_ACCURACY);
-    neg_chem_pot_i : in    ufixed(1 downto -G_ACCURACY);
+    temperature_i  : in    ufixed(-1 downto -G_ACCURACY); -- [0, 1[
+    neg_chem_pot_i : in    ufixed(1 downto -G_ACCURACY);  -- [0, 4[
     ram_addr_o     : out   std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
     ram_wr_data_o  : out   std_logic;
     ram_rd_data_i  : in    std_logic;
@@ -24,6 +24,9 @@ entity core is
 end entity core;
 
 architecture synthesis of core is
+
+  alias  ram_addr_x_o : std_logic_vector(G_ADDR_BITS - 1 downto 0) is ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS);
+  alias  ram_addr_y_o : std_logic_vector(G_ADDR_BITS - 1 downto 0) is ram_addr_o(G_ADDR_BITS - 1 downto 0);
 
   type   state_type is (INIT_ST, IDLE_ST, STEP1_ST, STEP2_ST, STEP3_ST, STEP4_ST, STEP5_ST, STEP6_ST, STEP7_ST, STEP8_ST, STEP9_ST);
   signal state : state_type := INIT_ST;
@@ -36,33 +39,22 @@ architecture synthesis of core is
   signal neighbor_cnt       : natural range 0 to 4;
   signal cell               : std_logic;
   signal valid              : std_logic;
-  signal prob_numerator     : std_logic_vector(G_ACCURACY - 1 downto 0);
-  signal prob_denominator   : std_logic_vector(G_ACCURACY - 1 downto 0);
-  signal prob_numerator_d   : std_logic_vector(G_ACCURACY - 1 downto 0);
-  signal prob_denominator_d : std_logic_vector(G_ACCURACY - 1 downto 0);
+  signal prob_numerator     : ufixed(2 downto -G_ACCURACY);
+  signal prob_denominator   : ufixed(2 downto -G_ACCURACY);
+  signal prob_numerator_d   : ufixed(2 downto -G_ACCURACY);
+  signal prob_denominator_d : ufixed(2 downto -G_ACCURACY);
 
   signal rand_output : std_logic_vector(63 downto 0);
-  signal random_d    : std_logic_vector(15 downto 0);
-  signal mult        : unsigned(15 downto 0);
-
-  pure function mult_grid (
-    r : unsigned(G_ADDR_BITS - 1 downto 0);
-    m : unsigned(G_ADDR_BITS - 1 downto 0)
-  ) return unsigned is
-    variable tmp_v : unsigned(2 * G_ADDR_BITS - 1 downto 0);
-  begin
-    tmp_v := r * m;
-    return tmp_v(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS);
-  end function mult_grid;
+  signal random_d    : ufixed(-1 downto -G_ACCURACY);
+  signal mult        : ufixed(2 downto -G_ACCURACY);
 
   pure function mult_prob (
-    r : unsigned(15 downto 0);
-    m : unsigned(15 downto 0)
-  ) return unsigned is
+    r : ufixed;
+    m : ufixed
+  ) return ufixed is
     variable tmp_v : unsigned(31 downto 0);
   begin
-    tmp_v := r * m;
-    return tmp_v(31 downto 16);
+    return r * m;
   end function mult_prob;
 
 --  attribute mark_debug : string;
@@ -86,6 +78,8 @@ begin
   state_proc : process (clk_i)
     variable new_pos_x_v : unsigned(G_ADDR_BITS - 1 downto 0);
     variable new_pos_y_v : unsigned(G_ADDR_BITS - 1 downto 0);
+    variable rand_x_v : ufixed(-1 downto -G_ADDR_BITS);
+    variable rand_y_v : ufixed(-1 downto -G_ADDR_BITS);
   begin
     if rising_edge(clk_i) then
       ram_wr_en_o <= '0';
@@ -95,56 +89,59 @@ begin
 
         when IDLE_ST =>
           if step_i = '1' then
-            -- Find random site
-            new_pos_x_v                                        := mult_grid(unsigned(rand_output(G_ADDR_BITS + 40 - 1 downto 40)),
-                                                                            to_unsigned(G_GRID_SIZE, G_ADDR_BITS));
-            new_pos_y_v                                        := mult_grid(unsigned(rand_output(G_ADDR_BITS + 20 - 1 downto 20)),
-                                                                            to_unsigned(G_GRID_SIZE, G_ADDR_BITS));
-            pos_x                                              <= new_pos_x_v;
-            pos_y                                              <= new_pos_y_v;
+            -- Get two random values in the range [0, 1[.
+            rand_x_v := to_ufixed(rand_output(G_ADDR_BITS + 40 - 1 downto 40), rand_x_v);
+            rand_y_v := to_ufixed(rand_output(G_ADDR_BITS + 20 - 1 downto 20), rand_y_v);
 
-            neighbor_cnt                                       <= 0;
+            -- Find random site
+            new_pos_x_v := unsigned(resize(rand_x_v * to_ufixed(G_GRID_SIZE, G_ADDR_BITS-1, 0), G_ADDR_BITS-1, 0));
+            new_pos_y_v := unsigned(resize(rand_y_v * to_ufixed(G_GRID_SIZE, G_ADDR_BITS-1, 0), G_ADDR_BITS-1, 0));
+
+            pos_x        <= new_pos_x_v;
+            pos_y        <= new_pos_y_v;
+
+            neighbor_cnt <= 0;
 
             -- Read from site
-            ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS) <= std_logic_vector(new_pos_x_v);
-            ram_addr_o(G_ADDR_BITS - 1 downto 0)               <= std_logic_vector(new_pos_y_v);
-            ram_wr_en_o                                        <= '0';
-            state                                              <= STEP1_ST;
+            ram_addr_x_o <= std_logic_vector(new_pos_x_v);
+            ram_addr_y_o <= std_logic_vector(new_pos_y_v);
+            ram_wr_en_o  <= '0';
+            state        <= STEP1_ST;
           end if;
 
         when STEP1_ST =>
           -- Read from site to the right
           if pos_x < G_GRID_SIZE - 1 then
-            ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS) <= std_logic_vector(pos_x + 1);
+            ram_addr_x_o <= std_logic_vector(pos_x + 1);
           else
-            ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS) <= (others => '0');
+            ram_addr_x_o <= (others => '0');
           end if;
-          ram_addr_o(G_ADDR_BITS - 1 downto 0) <= std_logic_vector(pos_y);
-          ram_wr_en_o                          <= '0';
-          state                                <= STEP2_ST;
+          ram_addr_y_o <= std_logic_vector(pos_y);
+          ram_wr_en_o  <= '0';
+          state        <= STEP2_ST;
 
         when STEP2_ST =>
           cell <= ram_rd_data_i;
           -- Read from site to the left
           if pos_x > 0 then
-            ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS) <= std_logic_vector(pos_x - 1);
+            ram_addr_x_o <= std_logic_vector(pos_x - 1);
           else
-            ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS) <= std_logic_vector(to_unsigned(G_GRID_SIZE - 1, G_ADDR_BITS));
+            ram_addr_x_o <= std_logic_vector(to_unsigned(G_GRID_SIZE - 1, G_ADDR_BITS));
           end if;
-          ram_addr_o(G_ADDR_BITS - 1 downto 0) <= std_logic_vector(pos_y);
-          ram_wr_en_o                          <= '0';
-          state                                <= STEP3_ST;
+          ram_addr_y_o <= std_logic_vector(pos_y);
+          ram_wr_en_o  <= '0';
+          state        <= STEP3_ST;
 
         when STEP3_ST =>
           if ram_rd_data_i = '1' then
             neighbor_cnt <= neighbor_cnt + 1;
           end if;
           -- Read from site below
-          ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS) <= std_logic_vector(pos_x);
+          ram_addr_x_o <= std_logic_vector(pos_x);
           if pos_y < G_GRID_SIZE - 1 then
-            ram_addr_o(G_ADDR_BITS - 1 downto 0) <= std_logic_vector(pos_y + 1);
+            ram_addr_y_o <= std_logic_vector(pos_y + 1);
           else
-            ram_addr_o(G_ADDR_BITS - 1 downto 0) <= (others => '0');
+            ram_addr_y_o <= (others => '0');
           end if;
           ram_wr_en_o <= '0';
           state       <= STEP4_ST;
@@ -154,11 +151,11 @@ begin
             neighbor_cnt <= neighbor_cnt + 1;
           end if;
           -- Read from site above
-          ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS) <= std_logic_vector(pos_x);
+          ram_addr_x_o <= std_logic_vector(pos_x);
           if pos_y > 0 then
-            ram_addr_o(G_ADDR_BITS - 1 downto 0) <= std_logic_vector(pos_y - 1);
+            ram_addr_y_o <= std_logic_vector(pos_y - 1);
           else
-            ram_addr_o(G_ADDR_BITS - 1 downto 0) <= std_logic_vector(to_unsigned(G_GRID_SIZE - 1, G_ADDR_BITS));
+            ram_addr_y_o <= std_logic_vector(to_unsigned(G_GRID_SIZE - 1, G_ADDR_BITS));
           end if;
           ram_wr_en_o <= '0';
           state       <= STEP5_ST;
@@ -177,21 +174,21 @@ begin
           state <= STEP7_ST;
 
         when STEP7_ST =>
-          random_d           <= rand_output(31 downto 16);
+          random_d           <= to_ufixed(rand_output(31 downto 16), random_d);
           prob_numerator_d   <= prob_numerator;
           prob_denominator_d <= prob_denominator;
           state              <= STEP8_ST;
 
         when STEP8_ST =>
-          mult  <= mult_prob(unsigned(random_d), unsigned(prob_numerator_d));
+          mult  <= resize(random_d*prob_numerator_d, mult);
           state <= STEP9_ST;
 
         when STEP9_ST =>
-          if mult < unsigned(prob_denominator_d) then
-            ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS) <= std_logic_vector(pos_x);
-            ram_addr_o(G_ADDR_BITS - 1 downto 0)               <= std_logic_vector(pos_y);
-            ram_wr_data_o                                      <= not cell;
-            ram_wr_en_o                                        <= '1';
+          if mult < prob_denominator_d then
+            ram_addr_x_o  <= std_logic_vector(pos_x);
+            ram_addr_y_o  <= std_logic_vector(pos_y);
+            ram_wr_data_o <= not cell;
+            ram_wr_en_o   <= '1';
           end if;
           state <= IDLE_ST;
 

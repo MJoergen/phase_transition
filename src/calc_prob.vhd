@@ -49,8 +49,8 @@ entity calc_prob is
     neighbor_cnt_i     : in    natural range 0 to 4;
     cell_i             : in    std_logic;
     valid_i            : in    std_logic;
-    prob_numerator_o   : out   std_logic_vector(G_ACCURACY - 1 downto 0);
-    prob_denominator_o : out   std_logic_vector(G_ACCURACY - 1 downto 0)
+    prob_numerator_o   : out   ufixed(2 downto -G_ACCURACY);
+    prob_denominator_o : out   ufixed(2 downto -G_ACCURACY)
   );
 end entity calc_prob;
 
@@ -108,10 +108,10 @@ architecture synthesis of calc_prob is
     return res2_v;
   end function calc_lnq;
 
-  signal   rom_addr : std_logic_vector(C_ADDR_SIZE - 1 downto 0);
-  signal   rom_data : std_logic_vector(C_DATA_SIZE - 1 downto 0);
-
   signal   lnq : sfixed(5 downto -G_ACCURACY);
+
+  signal   exp_arg : sfixed(4 downto 2 - G_ACCURACY);
+  signal   exp_res : ufixed(4 downto 2 - G_ACCURACY);
 
 begin
 
@@ -127,21 +127,20 @@ begin
     end if;
   end process calc_proc;
 
-  rom_addr <= to_stdlogicvector(lnq(4 downto 5 - C_ADDR_SIZE));
+  exp_arg <= lnq(4 downto 2 - G_ACCURACY);
 
-  exp_rom_inst : entity work.exp_rom
+  exp_inst : entity work.exp
     generic map (
-      G_ADDR_SIZE => C_ADDR_SIZE,
-      G_DATA_SIZE => C_DATA_SIZE
+      G_ACCURACY => G_ACCURACY
     )
     port map (
-      clk_i  => clk_i,
-      addr_i => rom_addr,
-      data_o => rom_data
-    ); -- exp_rom_inst : entity work.exp_rom
+      clk_i => clk_i,
+      arg_i => exp_arg,
+      res_o => exp_res
+    ); -- exp_inst : entity work.exp
 
-  prob_numerator_o   <= rom_data;
-  prob_denominator_o <= not rom_data;
+  prob_numerator_o   <= exp_res;
+  prob_denominator_o <= not exp_res;
 
 end architecture synthesis;
 
