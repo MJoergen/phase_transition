@@ -29,6 +29,8 @@ entity exp_rom is
     addr_i : in    std_logic_vector(G_ADDR_SIZE - 1 downto 0);
     data_o : out   std_logic_vector(G_DATA_SIZE - 1 downto 0)
   );
+  attribute latency : natural;
+  attribute latency of exp_rom : entity is 1;
 end entity exp_rom;
 
 architecture synthesis of exp_rom is

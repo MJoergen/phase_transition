@@ -36,7 +36,6 @@ library ieee;
 -- Delta_E = E(X') - E(X) and Delta_N = N(X') - N(X).
 -- P(X' | X or X') = q/(1+q).
 
-
 entity calc_prob is
   generic (
     G_ACCURACY : natural
@@ -52,12 +51,15 @@ entity calc_prob is
     prob_numerator_o   : out   ufixed(3 downto -G_ACCURACY);
     prob_denominator_o : out   ufixed(3 downto -G_ACCURACY)
   );
+
+  attribute latency : natural;
+  attribute latency of calc_prob : entity is 3;
 end entity calc_prob;
 
 architecture synthesis of calc_prob is
 
-  constant C_ADDR_SIZE : natural := G_ACCURACY;
-  constant C_DATA_SIZE : natural := G_ACCURACY;
+  constant C_ADDR_SIZE : natural              := G_ACCURACY;
+  constant C_DATA_SIZE : natural              := G_ACCURACY;
 
   pure function energy_gain (
     neighbor_cnt : natural range 0 to 4;

@@ -1,6 +1,7 @@
 library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
+  use ieee.math_real.all;
   use ieee.fixed_float_types.all;
   use ieee.fixed_pkg.all;
 
@@ -25,7 +26,9 @@ begin
   rst <= '1', '0' after 100 ns;
 
   test_proc : process
-    variable val_v : std_logic_vector(2 + G_ACCURACY downto 0);
+    variable val_v     : std_logic_vector(2 + G_ACCURACY downto 0);
+    variable exp_val_v : ufixed(3 downto -G_ACCURACY);
+    variable diff_v    : unsigned(3 + G_ACCURACY downto 0);
   begin
     wait until rst = '0';
     wait until rising_edge(clk);
@@ -35,9 +38,19 @@ begin
     for i in 0 to 2 ** (3 + G_ACCURACY) - 1 loop
       arg <= to_sfixed(std_logic_vector(to_signed(i - 2 ** (2 + G_ACCURACY), 3 + G_ACCURACY)), arg);
       wait until rising_edge(clk);
-      wait until rising_edge(clk);
-      wait until rising_edge(clk);
-      report to_string(arg) & "(" & to_string(to_real(arg)) & ")->" & to_string(res) & "(" & to_string(to_real(res)) & ")";
+
+      for j in 1 to work.exp'latency loop
+        wait until rising_edge(clk);
+      end loop;
+
+      exp_val_v := to_ufixed(exp(log(2.0) * to_real(arg)), res);
+      if res /= exp_val_v then
+        diff_v := unsigned(to_slv(exp_val_v)) - unsigned(to_slv(res));
+        assert diff_v < 8
+          report to_hstring(diff_v) & " :: " & to_string(arg) & "(" & to_string(to_real(arg)) & ")->"
+                 & to_string(res) & "(" & to_string(to_real(res)) & "). "
+                 & "exp=" & to_string(exp_val_v) & "(" & to_string(to_real(exp_val_v)) & ")";
+      end if;
     end loop;
 
     report "Test finished";

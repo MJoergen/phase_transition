@@ -27,6 +27,8 @@ entity exp is
     arg_i : in    sfixed(2 downto -G_ACCURACY);
     res_o : out   ufixed(3 downto -G_ACCURACY)
   );
+  attribute latency : natural;
+  attribute latency of exp : entity is 2;
 end entity exp;
 
 architecture synthesis of exp is
