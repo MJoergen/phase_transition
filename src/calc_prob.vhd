@@ -49,7 +49,8 @@ entity calc_prob is
     cell_i             : in    std_logic;
     valid_i            : in    std_logic;
     prob_numerator_o   : out   ufixed(3 downto -G_ACCURACY);
-    prob_denominator_o : out   ufixed(3 downto -G_ACCURACY)
+    prob_denominator_o : out   ufixed(3 downto -G_ACCURACY);
+    valid_o            : out   std_logic
   );
 
   attribute latency : natural;
@@ -111,6 +112,7 @@ architecture synthesis of calc_prob is
   end function calc_lnq;
 
   signal   lnq : sfixed(5 downto -G_ACCURACY) := (others => '0');
+  signal   lnq_valid : std_logic;
 
   signal   exp_arg : sfixed(4 downto 2 - G_ACCURACY);
   signal   exp_res : ufixed(5 downto 2 - G_ACCURACY);
@@ -126,6 +128,11 @@ begin
                         coef_e_i,
                         coef_n_i);
       end if;
+      lnq_valid <= valid_i;
+
+      if rst_i = '1' then
+         lnq_valid <= '0';
+      end if;
     end if;
   end process calc_proc;
 
@@ -136,13 +143,16 @@ begin
       G_ACCURACY => G_ACCURACY
     )
     port map (
-      clk_i => clk_i,
-      arg_i => exp_arg,
-      res_o => exp_res
+      clk_i   => clk_i,
+      rst_i   => rst_i,
+      valid_i => lnq_valid,
+      arg_i   => exp_arg,
+      valid_o => valid_o,
+      res_o   => exp_res
     ); -- exp_inst : entity work.exp
 
   prob_numerator_o   <= exp_res;
-  prob_denominator_o <= not exp_res;
+  prob_denominator_o <= resize(exp_res + 1, exp_res);
 
 end architecture synthesis;
 

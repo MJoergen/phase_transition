@@ -24,6 +24,7 @@ architecture simulation of tb_calc_prob is
   signal valid            : std_logic;
   signal prob_numerator   : ufixed(3 downto -G_ACCURACY);
   signal prob_denominator : ufixed(3 downto -G_ACCURACY);
+  signal prob_valid       : std_logic;
 
 begin
 
@@ -31,6 +32,31 @@ begin
   rst <= '1', '0' after 100 ns;
 
   test_proc : process
+    --
+
+    procedure verify (
+      neighbor_cnt_v : natural;
+      cell_v         : std_logic
+    ) is
+    begin
+      neighbor_cnt <= neighbor_cnt_v;
+      cell         <= cell_v;
+      valid        <= '1';
+      wait until rising_edge(clk);
+      valid        <= '0';
+
+      for i in 1 to work.calc_prob'latency loop
+        assert prob_valid = '0';
+        wait until rising_edge(clk);
+      end loop;
+
+      assert prob_valid = '1';
+
+      report to_string(to_real(prob_numerator)) & ", " & to_string(to_real(prob_denominator));
+    --
+    end procedure verify;
+
+  --
   begin
     coef_e       <= to_ufixed(0, coef_e);
     coef_n       <= to_ufixed(0, coef_n);
@@ -40,19 +66,16 @@ begin
     wait until rst = '0';
     wait until rising_edge(clk);
 
+    assert prob_valid = '0';
+
     report "Test started";
 
-    valid        <= '1';
-    wait until rising_edge(clk);
-    valid        <= '0';
-
-    for i in 1 to work.calc_prob'latency loop
-      wait until rising_edge(clk);
-    end loop;
+    verify(0, '0');
 
     report "Test finished";
 
-    running <= '0';
+    wait until rising_edge(clk);
+    running      <= '0';
     wait;
   end process test_proc;
 
@@ -69,7 +92,8 @@ begin
       cell_i             => cell,
       valid_i            => valid,
       prob_numerator_o   => prob_numerator,
-      prob_denominator_o => prob_denominator
+      prob_denominator_o => prob_denominator,
+      valid_o            => prob_valid
     ); -- calc_prob_inst : entity work.calc_prob
 
 end architecture simulation;

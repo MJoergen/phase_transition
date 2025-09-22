@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Mon Sep 22 04:31:32 2025
+[*] Mon Sep 22 18:51:19 2025
 [*]
 [dumpfile] "/home/mike/git/MJoergen/phase_transition/sim/tb_calc_prob/tb_calc_prob.ghw"
-[dumpfile_mtime] "Mon Sep 22 04:31:23 2025"
-[dumpfile_size] 1629
+[dumpfile_mtime] "Mon Sep 22 18:50:45 2025"
+[dumpfile_size] 1721
 [savefile] "/home/mike/git/MJoergen/phase_transition/sim/tb_calc_prob/tb_calc_prob.gtkw"
 [timestart] 0
 [size] 1000 600
 [pos] -1 -1
-*-25.894537 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-26.102173 145100000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.tb_calc_prob.
 [treeopen] top.tb_calc_prob.calc_prob_inst.
 [sst_width] 239
-[signals_width] 222
+[signals_width] 263
 [sst_expanded] 1
 [sst_vpaned_height] 306
 @800200
@@ -32,6 +32,9 @@ top.tb_calc_prob.calc_prob_inst.valid_i
 #{top.tb_calc_prob.calc_prob_inst.coef_n_i[1:-4]} top.tb_calc_prob.calc_prob_inst.coef_n_i[1] top.tb_calc_prob.calc_prob_inst.coef_n_i[0] top.tb_calc_prob.calc_prob_inst.coef_n_i[-1] top.tb_calc_prob.calc_prob_inst.coef_n_i[-2] top.tb_calc_prob.calc_prob_inst.coef_n_i[-3] top.tb_calc_prob.calc_prob_inst.coef_n_i[-4]
 #{top.tb_calc_prob.calc_prob_inst.prob_numerator_o[3:-4]} top.tb_calc_prob.calc_prob_inst.prob_numerator_o[3] top.tb_calc_prob.calc_prob_inst.prob_numerator_o[2] top.tb_calc_prob.calc_prob_inst.prob_numerator_o[1] top.tb_calc_prob.calc_prob_inst.prob_numerator_o[0] top.tb_calc_prob.calc_prob_inst.prob_numerator_o[-1] top.tb_calc_prob.calc_prob_inst.prob_numerator_o[-2] top.tb_calc_prob.calc_prob_inst.prob_numerator_o[-3] top.tb_calc_prob.calc_prob_inst.prob_numerator_o[-4]
 #{top.tb_calc_prob.calc_prob_inst.prob_denominator_o[3:-4]} top.tb_calc_prob.calc_prob_inst.prob_denominator_o[3] top.tb_calc_prob.calc_prob_inst.prob_denominator_o[2] top.tb_calc_prob.calc_prob_inst.prob_denominator_o[1] top.tb_calc_prob.calc_prob_inst.prob_denominator_o[0] top.tb_calc_prob.calc_prob_inst.prob_denominator_o[-1] top.tb_calc_prob.calc_prob_inst.prob_denominator_o[-2] top.tb_calc_prob.calc_prob_inst.prob_denominator_o[-3] top.tb_calc_prob.calc_prob_inst.prob_denominator_o[-4]
+@28
+top.tb_calc_prob.calc_prob_inst.valid_o
+@22
 #{top.tb_calc_prob.calc_prob_inst.lnq[5:-4]} top.tb_calc_prob.calc_prob_inst.lnq[5] top.tb_calc_prob.calc_prob_inst.lnq[4] top.tb_calc_prob.calc_prob_inst.lnq[3] top.tb_calc_prob.calc_prob_inst.lnq[2] top.tb_calc_prob.calc_prob_inst.lnq[1] top.tb_calc_prob.calc_prob_inst.lnq[0] top.tb_calc_prob.calc_prob_inst.lnq[-1] top.tb_calc_prob.calc_prob_inst.lnq[-2] top.tb_calc_prob.calc_prob_inst.lnq[-3] top.tb_calc_prob.calc_prob_inst.lnq[-4]
 #{top.tb_calc_prob.calc_prob_inst.exp_arg[4:-2]} top.tb_calc_prob.calc_prob_inst.exp_arg[4] top.tb_calc_prob.calc_prob_inst.exp_arg[3] top.tb_calc_prob.calc_prob_inst.exp_arg[2] top.tb_calc_prob.calc_prob_inst.exp_arg[1] top.tb_calc_prob.calc_prob_inst.exp_arg[0] top.tb_calc_prob.calc_prob_inst.exp_arg[-1] top.tb_calc_prob.calc_prob_inst.exp_arg[-2]
 #{top.tb_calc_prob.calc_prob_inst.exp_res[5:-2]} top.tb_calc_prob.calc_prob_inst.exp_res[5] top.tb_calc_prob.calc_prob_inst.exp_res[4] top.tb_calc_prob.calc_prob_inst.exp_res[3] top.tb_calc_prob.calc_prob_inst.exp_res[2] top.tb_calc_prob.calc_prob_inst.exp_res[1] top.tb_calc_prob.calc_prob_inst.exp_res[0] top.tb_calc_prob.calc_prob_inst.exp_res[-1] top.tb_calc_prob.calc_prob_inst.exp_res[-2]

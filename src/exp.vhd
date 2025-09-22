@@ -23,9 +23,12 @@ entity exp is
     G_ACCURACY : natural
   );
   port (
-    clk_i : in    std_logic;
-    arg_i : in    sfixed(2 downto -G_ACCURACY);
-    res_o : out   ufixed(3 downto -G_ACCURACY)
+    clk_i   : in    std_logic;
+    rst_i   : in    std_logic;
+    valid_i : in    std_logic;
+    arg_i   : in    sfixed(2 downto -G_ACCURACY);
+    valid_o : out   std_logic;
+    res_o   : out   ufixed(3 downto -G_ACCURACY)
   );
   attribute latency : natural;
   attribute latency of exp : entity is 2;
@@ -36,7 +39,8 @@ architecture synthesis of exp is
   constant C_ADDR_SIZE : natural := G_ACCURACY;
   constant C_DATA_SIZE : natural := G_ACCURACY;
 
-  signal   shift : integer range -4 to 3;
+  signal   shift       : integer range -4 to 3;
+  signal   shift_valid : std_logic;
 
   signal   addr : std_logic_vector(C_ADDR_SIZE - 1 downto 0);
   signal   data : std_logic_vector(C_DATA_SIZE - 1 downto 0);
@@ -65,7 +69,12 @@ begin
   first_proc : process (clk_i)
   begin
     if rising_edge(clk_i) then
-      shift <= to_integer(signed(arg_i(2 downto 0)));
+      shift       <= to_integer(signed(arg_i(2 downto 0)));
+      shift_valid <= valid_i;
+
+      if rst_i = '1' then
+        shift_valid <= '0';
+      end if;
     end if;
   end process first_proc;
 
@@ -77,38 +86,45 @@ begin
   second_proc : process (clk_i)
   begin
     if rising_edge(clk_i) then
+      if shift_valid = '1' then
 
-      case shift is
+        case shift is
 
-        when -4 =>
-          res_o <= to_ufixed("00000001" & data(C_DATA_SIZE-1 downto 4), res_o);
+          when -4 =>
+            res_o <= to_ufixed("00000001" & data(C_DATA_SIZE - 1 downto 4), res_o);
 
-        when -3 =>
-          res_o <= to_ufixed("0000001" & data(C_DATA_SIZE-1 downto 3), res_o);
+          when -3 =>
+            res_o <= to_ufixed("0000001" & data(C_DATA_SIZE - 1 downto 3), res_o);
 
-        when -2 =>
-          res_o <= to_ufixed("000001" & data(C_DATA_SIZE-1 downto 2), res_o);
+          when -2 =>
+            res_o <= to_ufixed("000001" & data(C_DATA_SIZE - 1 downto 2), res_o);
 
-        when -1 =>
-          res_o <= to_ufixed("00001" & data(C_DATA_SIZE-1 downto 1), res_o);
+          when -1 =>
+            res_o <= to_ufixed("00001" & data(C_DATA_SIZE - 1 downto 1), res_o);
 
-        when 0 =>
-          res_o <= to_ufixed("0001" & data, res_o);
+          when 0 =>
+            res_o <= to_ufixed("0001" & data, res_o);
 
-        when 1 =>
-          res_o <= to_ufixed("001" & data & "0", res_o);
+          when 1 =>
+            res_o <= to_ufixed("001" & data & "0", res_o);
 
-        when 2 =>
-          res_o <= to_ufixed("01" & data & "00", res_o);
+          when 2 =>
+            res_o <= to_ufixed("01" & data & "00", res_o);
 
-        when 3 =>
-          res_o <= to_ufixed("1" & data & "000", res_o);
+          when 3 =>
+            res_o <= to_ufixed("1" & data & "000", res_o);
 
-        when others =>
-          assert false;
+          when others =>
+            assert false;
 
-      end case;
+        end case;
 
+      end if;
+      valid_o <= shift_valid;
+
+      if rst_i = '1' then
+        valid_o <= '0';
+      end if;
     end if;
   end process second_proc;
 

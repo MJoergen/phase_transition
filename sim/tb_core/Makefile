@@ -14,7 +14,7 @@ SRC += $(PLATFORM_SRC_DIR)/tdp_ram.vhd
 DUT = core
 
 # Test duration
-STOP_TIME = 500ns
+STOP_TIME = 2000ns
 
 # Test specific generics
 GENERIC += -gG_GRID_SIZE=8

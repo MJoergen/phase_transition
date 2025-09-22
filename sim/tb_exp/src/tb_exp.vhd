@@ -13,12 +13,14 @@ end entity tb_exp;
 
 architecture simulation of tb_exp is
 
-  signal running : std_logic                := '1';
-  signal clk     : std_logic                := '1';
-  signal rst     : std_logic                := '1';
+  signal running : std_logic                      := '1';
+  signal clk     : std_logic                      := '1';
+  signal rst     : std_logic                      := '1';
 
-  signal arg : sfixed(2 downto -G_ACCURACY) := (others => '0');
-  signal res : ufixed(3 downto -G_ACCURACY);
+  signal arg       : sfixed(2 downto -G_ACCURACY) := (others => '0');
+  signal arg_valid : std_logic;
+  signal res       : ufixed(3 downto -G_ACCURACY);
+  signal res_valid : std_logic;
 
 begin
 
@@ -30,18 +32,27 @@ begin
     variable exp_val_v : ufixed(3 downto -G_ACCURACY);
     variable diff_v    : unsigned(3 + G_ACCURACY downto 0);
   begin
+    arg_valid <= '0';
     wait until rst = '0';
     wait until rising_edge(clk);
 
     report "Test started";
 
+    assert res_valid = '0';
+
     for i in 0 to 2 ** (3 + G_ACCURACY) - 1 loop
-      arg <= to_sfixed(std_logic_vector(to_signed(i - 2 ** (2 + G_ACCURACY), 3 + G_ACCURACY)), arg);
+      arg       <= to_sfixed(std_logic_vector(to_signed(i - 2 ** (2 + G_ACCURACY), 3 + G_ACCURACY)), arg);
+
+      arg_valid <= '1';
       wait until rising_edge(clk);
+      arg_valid <= '0';
 
       for j in 1 to work.exp'latency loop
+        assert res_valid = '0';
         wait until rising_edge(clk);
       end loop;
+
+      assert res_valid = '1';
 
       exp_val_v := to_ufixed(exp(log(2.0) * to_real(arg)), res);
       if res /= exp_val_v then
@@ -64,9 +75,12 @@ begin
       G_ACCURACY => G_ACCURACY
     )
     port map (
-      clk_i => clk,
-      arg_i => arg,
-      res_o => res
+      clk_i   => clk,
+      rst_i   => rst,
+      arg_i   => arg,
+      valid_i => arg_valid,
+      res_o   => res,
+      valid_o => res_valid
     ); -- exp_inst : entity work.exp
 
 end architecture simulation;
