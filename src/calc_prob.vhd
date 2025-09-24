@@ -151,8 +151,8 @@ begin
       res_o   => exp_res
     ); -- exp_inst : entity work.exp
 
-  prob_numerator_o   <= exp_res;
-  prob_denominator_o <= resize(exp_res + 1, exp_res);
+  prob_numerator_o   <= resize(exp_res, prob_numerator_o);
+  prob_denominator_o <= resize(prob_numerator_o + 1, prob_denominator_o);
 
 end architecture synthesis;
 

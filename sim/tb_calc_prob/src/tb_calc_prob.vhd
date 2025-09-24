@@ -52,6 +52,8 @@ begin
 
       assert prob_valid = '1';
 
+      assert prob_denominator = prob_numerator + 1;
+
       report to_string(to_real(prob_numerator)) & ", " & to_string(to_real(prob_denominator));
     --
     end procedure verify;
