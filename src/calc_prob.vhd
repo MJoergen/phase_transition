@@ -31,8 +31,8 @@ library ieee;
 -- Before swap: X
 -- After swap: X'
 
--- P(X') / P(X) = exp(-c_e * Delta_E + c_n * Delta_N) = q.
--- where c_e = 1/T and c_n = C/T, and
+-- P(X') / P(X) = exp(-c_e * Delta_E - c_n * Delta_N) = q.
+-- where c_e = 1/T and c_n = -C/T, and
 -- Delta_E = E(X') - E(X) and Delta_N = N(X') - N(X).
 -- P(X' | X or X') = q/(1+q).
 
@@ -59,8 +59,8 @@ end entity calc_prob;
 
 architecture synthesis of calc_prob is
 
-  constant C_ADDR_SIZE : natural              := G_ACCURACY;
-  constant C_DATA_SIZE : natural              := G_ACCURACY;
+  constant C_ADDR_SIZE : natural                    := G_ACCURACY;
+  constant C_DATA_SIZE : natural                    := G_ACCURACY;
 
   pure function energy_gain (
     neighbor_cnt : natural range 0 to 4;
@@ -86,7 +86,11 @@ architecture synthesis of calc_prob is
     end if;
   end function number_gain;
 
-  pure function calc_lnq (
+  -- This calculates:
+  -- -ln(q) = coef_e * Delta_E + coef_n * Delta_N.
+  -- where Delta_E and Delta_N is calculated for the swap: cell -> not cell.
+
+  pure function calc_neg_lnq (
     neighbor_cnt : natural range 0 to 4;
     cell         : std_logic;
     coef_e       : ufixed(-1 downto -G_ACCURACY);
@@ -108,10 +112,14 @@ architecture synthesis of calc_prob is
       res2_v := res_v - to_sfixed(coef_n);
     end if;
 
-    return res2_v;
-  end function calc_lnq;
+    report "neighbor_cnt=" & to_string(neighbor_cnt) & ", cell=" & to_string(cell) &
+           ", energy_gain_v=" & to_string(energy_gain_v) & ", number_gain_v=" & to_string(number_gain_v) &
+           " -> " & to_string(to_real(res_v));
 
-  signal   lnq : sfixed(5 downto -G_ACCURACY) := (others => '0');
+    return res2_v;
+  end function calc_neg_lnq;
+
+  signal   lnq       : sfixed(5 downto -G_ACCURACY) := (others => '0');
   signal   lnq_valid : std_logic;
 
   signal   exp_arg : sfixed(4 downto 2 - G_ACCURACY);
@@ -123,15 +131,15 @@ begin
   begin
     if rising_edge(clk_i) then
       if valid_i = '1' then
-        lnq <= calc_lnq(neighbor_cnt_i,
-                        cell_i,
-                        coef_e_i,
-                        coef_n_i);
+        lnq <= calc_neg_lnq(neighbor_cnt_i,
+                            cell_i,
+                            coef_e_i,
+                            coef_n_i);
       end if;
       lnq_valid <= valid_i;
 
       if rst_i = '1' then
-         lnq_valid <= '0';
+        lnq_valid <= '0';
       end if;
     end if;
   end process calc_proc;
