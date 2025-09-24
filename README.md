@@ -79,7 +79,7 @@ We're using the [Metropolis-Hastings algorithm](https://en.wikipedia.org/wiki/Me
 The equilibrium probability is given by:
 
 ```math
-Probability = \exp((\Omega - H)/T)
+Probability = \exp\left((\Omega - H)/T\right)
 ```
 
 where $T$ is the temperature (we set $k$ = 1). Here $\Omega$ is the grand potential and serves as a normalization factor;
@@ -92,7 +92,7 @@ it depends on the chemical potential $C$ and the temperature $T$, and we can the
 $\Omega$ can be calculated from the normalization property as:
 
 ```math
-\Omega(C, T) = -T \, \log \sum \exp(-H/T)
+\Omega(C, T) = -T \cdot \log \sum \exp\left(-H/T\right)
 ```
 
 where the sum is over all possible states of the system.
@@ -115,19 +115,19 @@ d\Omega = -S dT - N dC
 The average energy is
 
 ```math
-\<E\> = \Omega + \<N\> C + ST
+<E> = \Omega + <N> C + ST
 ```
 
 i.e.
 
 ```math
-d\<E\> = T dS + C dN
+dE = T dS + C dN
 ```
 
 Furthermore, the grand partition function $Z$ is related to the grand potential $\Omega$ via:
 
 ```math
-Z = \exp(-\Omega/T)
+Z = \exp\left(-\Omega/T\right)
 ```
 
 See more details about variance and correlation in the wikipedia page on [Grand canonical
@@ -141,6 +141,6 @@ The discontinuity is in $C$.
 TBD: How to calculate entropy S from the probability distribution?
 
 ```math
-S = average(-\log Probability)
+S = \left<-\log Probability\right>
 ```
 

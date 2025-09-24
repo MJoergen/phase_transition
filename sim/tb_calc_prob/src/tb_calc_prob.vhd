@@ -26,6 +26,30 @@ architecture simulation of tb_calc_prob is
   signal prob_denominator : ufixed(3 downto -G_ACCURACY);
   signal prob_valid       : std_logic;
 
+  -- This calculates the Hamiltonian contribution from a single cell
+  -- H = E - C N
+
+  pure function calc_hamil (
+    coef_e_v : real; -- 1/T
+    coef_n_v : real; -- -C/T
+    neighbor_cnt_v : real;
+    cell_v : real
+  ) return real is
+    variable energy_v : real;
+    variable number_v : real;
+    variable res_v    : real;
+  begin
+    energy_v := -neighbor_cnt_v * cell_v;
+    number_v := cell_v;
+    res_v    := -coef_e_v * energy_v - coef_n_v * number_v;
+    report "coef_e=" & to_string(coef_e_v) &
+           ", coef_n=" & to_string(coef_n_v) &
+           ", neighbor_cnt=" & to_string(neighbor_cnt_v) &
+           ", cell=" & to_string(cell_v) &
+           " -> " & to_string(res_v);
+    return res_v;
+  end function calc_hamil;
+
 begin
 
   clk <= running and not clk after 5 ns;
@@ -36,11 +60,12 @@ begin
 
     procedure verify (
       neighbor_cnt_v : natural;
-      cell_v         : std_logic
+      cell_v         : natural
     ) is
+      variable delta_hamil_v : real;
     begin
       neighbor_cnt <= neighbor_cnt_v;
-      cell         <= cell_v;
+      cell         <= '0' when cell_v = 0 else '1';
       valid        <= '1';
       wait until rising_edge(clk);
       valid        <= '0';
@@ -49,6 +74,9 @@ begin
         assert prob_valid = '0';
         wait until rising_edge(clk);
       end loop;
+
+      delta_hamil_v := calc_hamil(to_real(coef_e), to_real(coef_n), real(neighbor_cnt_v), real(1 - cell_v)) -
+                       calc_hamil(to_real(coef_e), to_real(coef_n), real(neighbor_cnt_v), real(cell_v));
 
       assert prob_valid = '1';
 
@@ -70,7 +98,7 @@ begin
 
     report "Test started";
 
-    verify(0, '0');
+    verify(0, 0);
 
     report "Test finished";
 
