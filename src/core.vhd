@@ -36,6 +36,8 @@ architecture synthesis of core is
   signal pos_x : unsigned(G_ADDR_BITS - 1 downto 0);
   signal pos_y : unsigned(G_ADDR_BITS - 1 downto 0);
 
+  signal coef_e             : ufixed(3 downto -G_ACCURACY);
+  signal coef_n             : ufixed(3 downto -G_ACCURACY);
   signal neighbor_cnt       : natural range 0 to 4;
   signal cell               : std_logic;
   signal valid              : std_logic;
@@ -221,6 +223,9 @@ begin
       output_o => rand_output
     ); -- random_inst : entity work.random
 
+  coef_e <= resize(temperature_i, coef_e); -- TBD
+  coef_n <= resize(neg_chem_pot_i, coef_n); -- TBD
+
   calc_prob_inst : entity work.calc_prob
     generic map (
       G_ACCURACY => G_ACCURACY
@@ -228,8 +233,8 @@ begin
     port map (
       clk_i              => clk_i,
       rst_i              => rst_i,
-      coef_e_i           => temperature_i,
-      coef_n_i           => neg_chem_pot_i,
+      coef_e_i           => coef_e,
+      coef_n_i           => coef_n,
       neighbor_cnt_i     => neighbor_cnt,
       cell_i             => cell,
       valid_i            => valid,

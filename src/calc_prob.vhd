@@ -36,6 +36,9 @@ library ieee;
 -- Delta_E = E(X') - E(X) and Delta_N = N(X') - N(X).
 -- P(X' | X or X') = q/(1+q).
 
+-- coef_e is in range [1, infinity[
+-- coef_n is in range [0, infinity[
+
 entity calc_prob is
   generic (
     G_ACCURACY : natural
@@ -43,8 +46,8 @@ entity calc_prob is
   port (
     clk_i              : in    std_logic;
     rst_i              : in    std_logic;
-    coef_e_i           : in    ufixed(-1 downto -G_ACCURACY);
-    coef_n_i           : in    ufixed(1 downto -G_ACCURACY);
+    coef_e_i           : in    ufixed(3 downto -G_ACCURACY);
+    coef_n_i           : in    ufixed(3 downto -G_ACCURACY);
     neighbor_cnt_i     : in    natural range 0 to 4;
     cell_i             : in    std_logic;
     valid_i            : in    std_logic;
@@ -93,13 +96,13 @@ architecture synthesis of calc_prob is
   pure function calc_neg_lnq (
     neighbor_cnt : natural range 0 to 4;
     cell         : std_logic;
-    coef_e       : ufixed(-1 downto -G_ACCURACY);
-    coef_n       : ufixed(1 downto -G_ACCURACY)
+    coef_e       : ufixed(3 downto -G_ACCURACY);
+    coef_n       : ufixed(3 downto -G_ACCURACY)
   ) return sfixed is
     variable energy_gain_v : integer range -4 to 4;
     variable number_gain_v : integer range -1 to 1;
-    variable res_v         : sfixed(4 downto -G_ACCURACY);
-    variable res2_v        : sfixed(5 downto -G_ACCURACY);
+    variable res_v         : sfixed(8 downto -G_ACCURACY);
+    variable res2_v        : sfixed(9 downto -G_ACCURACY);
   begin
     energy_gain_v := energy_gain(neighbor_cnt, cell);
     number_gain_v := number_gain(neighbor_cnt, cell);
@@ -119,7 +122,7 @@ architecture synthesis of calc_prob is
     return res2_v;
   end function calc_neg_lnq;
 
-  signal   lnq       : sfixed(5 downto -G_ACCURACY) := (others => '0');
+  signal   lnq       : sfixed(9 downto -G_ACCURACY) := (others => '0');
   signal   lnq_valid : std_logic;
 
   signal   exp_arg : sfixed(4 downto 2 - G_ACCURACY);
