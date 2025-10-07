@@ -41,10 +41,10 @@ architecture synthesis of core is
   signal neighbor_cnt       : natural range 0 to 4;
   signal cell               : std_logic;
   signal valid              : std_logic;
-  signal prob_numerator     : ufixed(3 downto -G_ACCURACY);
-  signal prob_denominator   : ufixed(3 downto -G_ACCURACY);
-  signal prob_numerator_d   : ufixed(3 downto -G_ACCURACY);
-  signal prob_denominator_d : ufixed(3 downto -G_ACCURACY);
+  signal prob_numerator     : ufixed(7 downto -G_ACCURACY);
+  signal prob_denominator   : ufixed(7 downto -G_ACCURACY);
+  signal prob_numerator_d   : ufixed(7 downto -G_ACCURACY);
+  signal prob_denominator_d : ufixed(7 downto -G_ACCURACY);
 
   signal rand_output : std_logic_vector(63 downto 0);
   signal random_d    : ufixed(-1 downto -G_ACCURACY);

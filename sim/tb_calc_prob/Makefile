@@ -13,7 +13,7 @@ DUT = calc_prob
 STOP_TIME = 5000ns
 
 # Test specific generics
-GENERIC += -gG_ACCURACY=4
+GENERIC += -gG_ACCURACY=16
 
 include ../Makefile.inc
 

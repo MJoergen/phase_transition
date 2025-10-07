@@ -37,7 +37,7 @@ class PhaseTransition < Gosu::Window
     # The range for temperature is [0, 1]
     # The range for chemical potential is [-3, -1]
     @temperature = 0.3
-    @chem_pot    = -2.5
+    @chem_pot    = -1.5
 
     @paused = 1
     @graph  = 1
@@ -66,6 +66,23 @@ class PhaseTransition < Gosu::Window
     occupied
   end
 
+  def calc_prob(coef_e, coef_n, neighbors, occupied)
+    # Calculate current and new values of energy and number
+    e_current = energy(occupied,   neighbors)
+    e_new     = energy(1-occupied, neighbors)
+    n_current = number(occupied,   neighbors)
+    n_new     = number(1-occupied, neighbors)
+
+    # Calculate current and new values of Hamiltonian
+    h_current = coef_e * e_current + coef_n * n_current
+    h_new     = coef_e * e_new     + coef_n * n_new
+
+    res = Math.exp(h_current - h_new)
+    #printf "coef_e=%f, coef_n=%f, n=%d, o=%d, e_loss=%f, n_loss=%f, q=%f\n",
+    #  coef_e, coef_n, neighbors, occupied, e_current - e_new, n_current - n_new, res
+    return res
+  end
+
   # When user presses 'S'
   def step
     # Choose a random site
@@ -81,17 +98,7 @@ class PhaseTransition < Gosu::Window
       @cells[y][(x+1) % WIDTH] +
       @cells[y][(x-1) % WIDTH]
 
-    # Calculate current and new values of energy and number
-    e_current = energy(occupied,   neighbors)
-    e_new     = energy(1-occupied, neighbors)
-    n_current = number(occupied,   neighbors)
-    n_new     = number(1-occupied, neighbors)
-
-    # Calculate current and new values of Hamiltonian
-    h_current = e_current - @chem_pot * n_current
-    h_new     = e_new     - @chem_pot * n_new
-
-    q = Math.exp((h_current - h_new)/@temperature)
+    q = calc_prob(1.0/@temperature, -@chem_pot/@temperature, neighbors, occupied)
 
     prob_swap = q/(1+q)
 
@@ -176,8 +183,10 @@ class PhaseTransition < Gosu::Window
     }
     hamiltonian = cnt_energy-@chem_pot*cnt_number
 
-    @energy_list.push(cnt_energy)
-    @number_list.push(cnt_number)
+    if @paused == 0
+      @energy_list.push(cnt_energy)
+      @number_list.push(cnt_number)
+    end
 
     if @graph > 0 then
       draw_graph(0, 0,                  WIDTH*CELL_SIZE, HEIGHT*CELL_SIZE/2, @number_list, WIDTH*CELL_SIZE, @col_faded_red)

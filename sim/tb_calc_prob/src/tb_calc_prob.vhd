@@ -13,20 +13,20 @@ end entity tb_calc_prob;
 
 architecture simulation of tb_calc_prob is
 
-  signal   running : std_logic                           := '1';
-  signal   clk     : std_logic                           := '1';
-  signal   rst     : std_logic                           := '1';
+  signal   running : std_logic                                    := '1';
+  signal   clk     : std_logic                                    := '1';
+  signal   rst     : std_logic                                    := '1';
 
-  constant C_TEMPERATURE  : ufixed(2 downto -G_ACCURACY) := to_ufixed(2.0, 2, -G_ACCURACY);
-  constant C_NEG_CHEM_POT : ufixed(2 downto -G_ACCURACY) := to_ufixed(3.0, 2, -G_ACCURACY);
+  constant C_TEMPERATURE  : ufixed(G_ACCURACY downto -G_ACCURACY) := to_ufixed(0.3, G_ACCURACY, -G_ACCURACY);
+  constant C_NEG_CHEM_POT : ufixed(G_ACCURACY downto -G_ACCURACY) := to_ufixed(1.5, G_ACCURACY, -G_ACCURACY);
 
   signal   coef_e           : ufixed(3 downto -G_ACCURACY);
   signal   coef_n           : ufixed(3 downto -G_ACCURACY);
   signal   neighbor_cnt     : natural range 0 to 4;
   signal   cell             : std_logic;
   signal   valid            : std_logic;
-  signal   prob_numerator   : ufixed(3 downto -G_ACCURACY);
-  signal   prob_denominator : ufixed(3 downto -G_ACCURACY);
+  signal   prob_numerator   : ufixed(7 downto -G_ACCURACY);
+  signal   prob_denominator : ufixed(7 downto -G_ACCURACY);
   signal   prob_valid       : std_logic;
 
   -- This calculates the Hamiltonian contribution from a single cell
@@ -43,9 +43,9 @@ architecture simulation of tb_calc_prob is
     energy_v := -neighbor_cnt_v * cell_v;
     number_v := cell_v;
     res_v    := energy_v + to_real(C_NEG_CHEM_POT) * number_v;
-    report "neighbor_cnt=" & to_string(neighbor_cnt_v) &
-           ", cell=" & to_string(cell_v) &
-           " -> " & to_string(res_v);
+    --    report "neighbor_cnt=" & to_string(neighbor_cnt_v) &
+    --           ", cell=" & to_string(cell_v) &
+    --           " -> " & to_string(res_v);
     return res_v;
   end function calc_hamil;
 
@@ -62,6 +62,8 @@ begin
       cell_v         : natural
     ) is
       variable delta_hamil_v : real;
+      variable q_v           : real;
+      variable diff_v        : real;
     begin
       neighbor_cnt <= neighbor_cnt_v;
       cell         <= '0' when cell_v = 0 else '1';
@@ -76,14 +78,17 @@ begin
 
       assert prob_valid = '1';
 
-      assert prob_denominator = prob_numerator + 1;
+      assert prob_denominator = resize(prob_numerator + 1, prob_denominator);
 
       delta_hamil_v := calc_hamil(real(neighbor_cnt_v), real(1 - cell_v)) -
                        calc_hamil(real(neighbor_cnt_v), real(cell_v));
 
-      report "delta_hamil_v=" & to_string(delta_hamil_v);
+      q_v           := exp(-delta_hamil_v / to_real(C_TEMPERATURE));
+      -- report "q_expected=" & to_string(q_v);
 
-      report to_string(to_real(prob_numerator)) & ", " & to_string(to_real(prob_denominator));
+      diff_v        := (1.0 + q_v) - to_real(prob_denominator);
+
+      report "diff_v=" & to_string(diff_v);
     --
     end procedure verify;
 
@@ -108,12 +113,21 @@ begin
 
     report "Test started";
 
-    verify(0, 0);
+    for n in 0 to 4 loop
+      --
+      for c in 0 to 1 loop
+        verify(n, c);
+      end loop;
+
+    --
+    end loop;
+
+    wait until rising_edge(clk);
 
     report "Test finished";
 
     wait until rising_edge(clk);
-    running      <= '0';
+    running <= '0';
     wait;
   end process test_proc;
 
