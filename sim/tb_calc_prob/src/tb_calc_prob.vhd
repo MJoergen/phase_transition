@@ -20,6 +20,9 @@ architecture simulation of tb_calc_prob is
   constant C_TEMPERATURE  : ufixed(G_ACCURACY downto -G_ACCURACY) := to_ufixed(0.3, G_ACCURACY, -G_ACCURACY);
   constant C_NEG_CHEM_POT : ufixed(G_ACCURACY downto -G_ACCURACY) := to_ufixed(1.5, G_ACCURACY, -G_ACCURACY);
 
+  constant C_LN2_RECIP_REAL : real                    := 1.442695041;
+  constant C_LN2_RECIP : ufixed(2 downto -G_ACCURACY) := to_ufixed(C_LN2_RECIP_REAL, 2, -G_ACCURACY);
+
   signal   coef_e           : ufixed(3 downto -G_ACCURACY);
   signal   coef_n           : ufixed(3 downto -G_ACCURACY);
   signal   neighbor_cnt     : natural range 0 to 4;
@@ -97,8 +100,8 @@ begin
     report "Temperature=" & to_string(to_real(C_TEMPERATURE));
     report "Chemical Potential=" & to_string(-to_real(C_NEG_CHEM_POT));
 
-    coef_e       <= resize(1 / C_TEMPERATURE, coef_e);
-    coef_n       <= resize(C_NEG_CHEM_POT / C_TEMPERATURE, coef_n);
+    coef_e       <= resize(C_LN2_RECIP / C_TEMPERATURE, coef_e);
+    coef_n       <= resize(C_LN2_RECIP * C_NEG_CHEM_POT / C_TEMPERATURE, coef_n);
 
     neighbor_cnt <= 0;
     cell         <= '0';

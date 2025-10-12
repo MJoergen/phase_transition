@@ -1,6 +1,6 @@
 # List of source files
-SRC += $(SRC_DIR)/exp_rom.vhd
-SRC += $(SRC_DIR)/exp.vhd
+SRC += $(SRC_DIR)/pow2_rom.vhd
+SRC += $(SRC_DIR)/pow2.vhd
 SRC += $(SRC_DIR)/calc_prob.vhd
 
 # List of test specific simulation files

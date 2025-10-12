@@ -45,6 +45,7 @@ architecture synthesis of core is
   signal prob_denominator   : ufixed(7 downto -G_ACCURACY);
   signal prob_numerator_d   : ufixed(7 downto -G_ACCURACY);
   signal prob_denominator_d : ufixed(7 downto -G_ACCURACY);
+  signal prob_valid         : std_logic;
 
   signal rand_output : std_logic_vector(63 downto 0);
   signal random_d    : ufixed(-1 downto -G_ACCURACY);
@@ -176,10 +177,12 @@ begin
           state <= STEP7_ST;
 
         when STEP7_ST =>
-          random_d           <= to_ufixed(rand_output(31 downto 32 - G_ACCURACY), random_d);
-          prob_numerator_d   <= prob_numerator;
-          prob_denominator_d <= prob_denominator;
-          state              <= STEP8_ST;
+          if prob_valid = '1' then
+            random_d           <= to_ufixed(rand_output(31 downto 32 - G_ACCURACY), random_d);
+            prob_numerator_d   <= prob_numerator;
+            prob_denominator_d <= prob_denominator;
+            state              <= STEP8_ST;
+          end if;
 
         when STEP8_ST =>
           mult  <= resize(random_d * prob_numerator_d, mult);
@@ -223,7 +226,7 @@ begin
       output_o => rand_output
     ); -- random_inst : entity work.random
 
-  coef_e <= resize(temperature_i, coef_e); -- TBD
+  coef_e <= resize(temperature_i, coef_e);  -- TBD
   coef_n <= resize(neg_chem_pot_i, coef_n); -- TBD
 
   calc_prob_inst : entity work.calc_prob
@@ -239,7 +242,8 @@ begin
       cell_i             => cell,
       valid_i            => valid,
       prob_numerator_o   => prob_numerator,
-      prob_denominator_o => prob_denominator
+      prob_denominator_o => prob_denominator,
+      valid_o            => prob_valid
     ); -- calc_prob_inst : entity work.calc_prob
 
 end architecture synthesis;

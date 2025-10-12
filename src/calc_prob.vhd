@@ -5,7 +5,7 @@ library ieee;
   use ieee.fixed_pkg.all;
 
 -- This calculates the value:
--- q = exp(Coef_e*E_loss + Coef_n*N_loss)
+-- q = pow2(Coef_e*E_loss + Coef_n*N_loss)
 -- where
 -- E_loss = E_cur - E_new
 -- N_loss = N_cur - N_new
@@ -30,7 +30,7 @@ entity calc_prob is
   );
 
   attribute latency : natural;
-  attribute latency of calc_prob : entity is 4;
+  attribute latency of calc_prob : entity is 3;
 end entity calc_prob;
 
 architecture synthesis of calc_prob is
@@ -98,8 +98,8 @@ architecture synthesis of calc_prob is
   signal   lnq       : sfixed(9 downto -G_ACCURACY) := (others => '0');
   signal   lnq_valid : std_logic;
 
-  signal   exp_arg : sfixed(4 downto -G_ACCURACY);
-  signal   exp_res : ufixed(7 downto -G_ACCURACY);
+  signal   pow2_arg : sfixed(4 downto -G_ACCURACY);
+  signal   pow2_res : ufixed(7 downto -G_ACCURACY);
 
 begin
 
@@ -120,9 +120,9 @@ begin
     end if;
   end process calc_proc;
 
-  exp_arg <= resize(lnq, 4, -G_ACCURACY);
+  pow2_arg <= resize(lnq, 4, -G_ACCURACY);
 
-  exp_inst : entity work.exp
+  pow2_inst : entity work.pow2
     generic map (
       G_ACCURACY => G_ACCURACY
     )
@@ -130,12 +130,12 @@ begin
       clk_i   => clk_i,
       rst_i   => rst_i,
       valid_i => lnq_valid,
-      arg_i   => exp_arg,
+      arg_i   => pow2_arg,
       valid_o => valid_o,
-      res_o   => exp_res
-    ); -- exp_inst : entity work.exp
+      res_o   => pow2_res
+    ); -- pow2_inst : entity work.pow2
 
-  prob_numerator_o   <= resize(exp_res, prob_numerator_o);
+  prob_numerator_o   <= resize(pow2_res, prob_numerator_o);
   prob_denominator_o <= resize(prob_numerator_o + 1, prob_denominator_o);
 
 end architecture synthesis;

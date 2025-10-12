@@ -18,7 +18,7 @@ library ieee;
   use ieee.fixed_float_types.all;
   use ieee.fixed_pkg.all;
 
-entity exp is
+entity pow2 is
   generic (
     G_ACCURACY : natural
   );
@@ -31,17 +31,10 @@ entity exp is
     res_o   : out   ufixed(7 downto -G_ACCURACY)
   );
   attribute latency : natural;
-  attribute latency of exp : entity is 3;
-end entity exp;
+  attribute latency of pow2 : entity is 2;
+end entity pow2;
 
-architecture synthesis of exp is
-
-  constant C_LN2_RECIP_REAL : real                    := 1.442695041;
-
-  constant C_LN2_RECIP : sfixed(2 downto -G_ACCURACY) := to_sfixed(C_LN2_RECIP_REAL, 2, -G_ACCURACY);
-
-  signal   ln2_arg       : sfixed(4 downto -G_ACCURACY);
-  signal   ln2_arg_valid : std_logic;
+architecture synthesis of pow2 is
 
   constant C_ADDR_SIZE : natural                      := G_ACCURACY;
   constant C_DATA_SIZE : natural                      := G_ACCURACY;
@@ -52,21 +45,7 @@ architecture synthesis of exp is
   signal   addr : std_logic_vector(C_ADDR_SIZE - 1 downto 0);
   signal   data : std_logic_vector(C_DATA_SIZE - 1 downto 0);
 
-  subtype  R_MULT_RANGE is natural range sfixed_high(C_LN2_RECIP, '*', arg_i) downto sfixed_low(C_LN2_RECIP, '*', arg_i);
-
-  signal   mult : sfixed(R_MULT_RANGE);
-
 begin
-
-  stage0_proc : process (clk_i)
-  begin
-    if rising_edge(clk_i) then
-      mult          <= C_LN2_RECIP * arg_i;
-      ln2_arg_valid <= valid_i;
-    end if;
-  end process stage0_proc;
-
-  ln2_arg <= resize(mult, ln2_arg);
 
   ------------------------------------
   -- First cycle: Table lookup
@@ -74,9 +53,9 @@ begin
   -- The data represents a number in the range [0, 1[.
   ------------------------------------
 
-  addr    <= to_slv(ln2_arg(-1 downto -G_ACCURACY));
+  addr    <= to_slv(arg_i(-1 downto -G_ACCURACY));
 
-  exp_rom_inst : entity work.exp_rom
+  pow2_rom_inst : entity work.pow2_rom
     generic map (
       G_ADDR_SIZE => C_ADDR_SIZE,
       G_DATA_SIZE => C_DATA_SIZE
@@ -85,33 +64,19 @@ begin
       clk_i  => clk_i,
       addr_i => addr,
       data_o => data
-    ); -- exp_rom_inst : entity work.exp_rom
+    ); -- pow2_rom_inst : entity work.pow2_rom
 
   first_proc : process (clk_i)
   begin
     if rising_edge(clk_i) then
-      shift       <= to_integer(signed(ln2_arg(4 downto 0)));
-      shift_valid <= ln2_arg_valid;
+      shift       <= to_integer(signed(arg_i(4 downto 0)));
+      shift_valid <= valid_i;
 
       if rst_i = '1' then
         shift_valid <= '0';
       end if;
     end if;
   end process first_proc;
-
-
-  --  report_proc : process (clk_i)
-  --  begin
-  --    if rising_edge(clk_i) then
-  --      if valid_i = '1' then
-  --        report "exp: arg=" & to_string(to_real(arg_i)) &
-  --               ", ln2_arg=" & to_string(to_real(ln2_arg));
-  --      end if;
-  --      if valid_o = '1' then
-  --        report "exp: res=" & to_string(to_real(res_o));
-  --      end if;
-  --    end if;
-  --  end process report_proc;
 
 
   ------------------------------------

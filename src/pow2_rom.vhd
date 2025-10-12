@@ -19,7 +19,7 @@ library ieee;
   use ieee.numeric_std_unsigned.all;
   use ieee.math_real.all;
 
-entity exp_rom is
+entity pow2_rom is
   generic (
     G_ADDR_SIZE : natural;
     G_DATA_SIZE : natural
@@ -30,10 +30,10 @@ entity exp_rom is
     data_o : out   std_logic_vector(G_DATA_SIZE - 1 downto 0)
   );
   attribute latency : natural;
-  attribute latency of exp_rom : entity is 1;
-end entity exp_rom;
+  attribute latency of pow2_rom : entity is 1;
+end entity pow2_rom;
 
-architecture synthesis of exp_rom is
+architecture synthesis of pow2_rom is
 
   constant C_SCALE_X : natural := 2 ** G_ADDR_SIZE;
   constant C_SCALE_Y : natural := 2 ** G_DATA_SIZE;

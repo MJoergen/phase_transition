@@ -5,21 +5,21 @@ library ieee;
   use ieee.fixed_float_types.all;
   use ieee.fixed_pkg.all;
 
-entity tb_exp is
+entity tb_pow2 is
   generic (
     G_ACCURACY : natural
   );
-end entity tb_exp;
+end entity tb_pow2;
 
-architecture simulation of tb_exp is
+architecture simulation of tb_pow2 is
 
   signal running : std_logic                      := '1';
   signal clk     : std_logic                      := '1';
   signal rst     : std_logic                      := '1';
 
-  signal arg       : sfixed(2 downto -G_ACCURACY) := (others => '0');
+  signal arg       : sfixed(4 downto -G_ACCURACY) := (others => '0');
   signal arg_valid : std_logic;
-  signal res       : ufixed(3 downto -G_ACCURACY);
+  signal res       : ufixed(7 downto -G_ACCURACY);
   signal res_valid : std_logic;
 
 begin
@@ -29,8 +29,8 @@ begin
 
   test_proc : process
     variable val_v     : std_logic_vector(2 + G_ACCURACY downto 0);
-    variable exp_val_v : ufixed(3 downto -G_ACCURACY);
-    variable diff_v    : unsigned(3 + G_ACCURACY downto 0);
+    variable exp_val_v : ufixed(7 downto -G_ACCURACY);
+    variable diff_v    : unsigned(7 + G_ACCURACY downto 0);
   begin
     arg_valid <= '0';
     wait until rst = '0';
@@ -41,13 +41,13 @@ begin
     assert res_valid = '0';
 
     for i in 0 to 2 ** (3 + G_ACCURACY) - 1 loop
-      arg       <= to_sfixed(std_logic_vector(to_signed(i - 2 ** (2 + G_ACCURACY), 3 + G_ACCURACY)), arg);
+      arg       <= to_sfixed(std_logic_vector(to_signed(i - 2 ** (2 + G_ACCURACY), 5 + G_ACCURACY)), arg);
 
       arg_valid <= '1';
       wait until rising_edge(clk);
       arg_valid <= '0';
 
-      for j in 1 to work.exp'latency loop
+      for j in 1 to work.pow2'latency loop
         assert res_valid = '0';
         wait until rising_edge(clk);
       end loop;
@@ -70,7 +70,7 @@ begin
     wait;
   end process test_proc;
 
-  exp_inst : entity work.exp
+  pow2_inst : entity work.pow2
     generic map (
       G_ACCURACY => G_ACCURACY
     )
@@ -81,7 +81,7 @@ begin
       valid_i => arg_valid,
       res_o   => res,
       valid_o => res_valid
-    ); -- exp_inst : entity work.exp
+    ); -- pow2_inst : entity work.pow2
 
 end architecture simulation;
 
