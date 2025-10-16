@@ -2,20 +2,19 @@
 SRC += $(SRC_DIR)/calc_prob.vhd
 SRC += $(SRC_DIR)/lfsr.vhd
 SRC += $(SRC_DIR)/single.vhd
-SRC += $(SRC_DIR)/core.vhd
 SRC += $(SRC_DIR)/random.vhd
 SRC += $(SRC_DIR)/pow2_rom.vhd
 SRC += $(SRC_DIR)/pow2.vhd
 
 # List of test specific simulation files
-SRC += $(SIM_SRC_DIR)/tb_core.vhd
+SRC += $(SIM_SRC_DIR)/tb_single.vhd
 SRC += $(PLATFORM_SRC_DIR)/tdp_ram.vhd
 
 # Top level entity
-DUT = core
+DUT = single
 
 # Test duration
-STOP_TIME = 1us
+STOP_TIME = 20us
 
 # Test specific generics
 GENERIC += -gG_GRID_SIZE=8

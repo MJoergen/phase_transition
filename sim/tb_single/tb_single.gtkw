@@ -1,0 +1,95 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Thu Oct 16 13:45:31 2025
+[*]
+[dumpfile] "/home/mfj/git/PRIVATE/MJoergen/phase_transition/sim/tb_single/tb_single.ghw"
+[dumpfile_mtime] "Thu Oct 16 13:45:22 2025"
+[dumpfile_size] 232820
+[savefile] "/home/mfj/git/PRIVATE/MJoergen/phase_transition/sim/tb_single/tb_single.gtkw"
+[timestart] 0
+[size] 1405 881
+[pos] -1 -1
+*-32.014023 652500000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_single.
+[sst_width] 210
+[signals_width] 304
+[sst_expanded] 1
+[sst_vpaned_height] 241
+@800200
+-single
+@28
+top.tb_single.single_inst.clk_i
+top.tb_single.single_inst.rst_i
+@22
+#{top.tb_single.single_inst.coef_e_i[3:-12]} top.tb_single.single_inst.coef_e_i[3] top.tb_single.single_inst.coef_e_i[2] top.tb_single.single_inst.coef_e_i[1] top.tb_single.single_inst.coef_e_i[0] top.tb_single.single_inst.coef_e_i[-1] top.tb_single.single_inst.coef_e_i[-2] top.tb_single.single_inst.coef_e_i[-3] top.tb_single.single_inst.coef_e_i[-4] top.tb_single.single_inst.coef_e_i[-5] top.tb_single.single_inst.coef_e_i[-6] top.tb_single.single_inst.coef_e_i[-7] top.tb_single.single_inst.coef_e_i[-8] top.tb_single.single_inst.coef_e_i[-9] top.tb_single.single_inst.coef_e_i[-10] top.tb_single.single_inst.coef_e_i[-11] top.tb_single.single_inst.coef_e_i[-12]
+#{top.tb_single.single_inst.coef_n_i[3:-12]} top.tb_single.single_inst.coef_n_i[3] top.tb_single.single_inst.coef_n_i[2] top.tb_single.single_inst.coef_n_i[1] top.tb_single.single_inst.coef_n_i[0] top.tb_single.single_inst.coef_n_i[-1] top.tb_single.single_inst.coef_n_i[-2] top.tb_single.single_inst.coef_n_i[-3] top.tb_single.single_inst.coef_n_i[-4] top.tb_single.single_inst.coef_n_i[-5] top.tb_single.single_inst.coef_n_i[-6] top.tb_single.single_inst.coef_n_i[-7] top.tb_single.single_inst.coef_n_i[-8] top.tb_single.single_inst.coef_n_i[-9] top.tb_single.single_inst.coef_n_i[-10] top.tb_single.single_inst.coef_n_i[-11] top.tb_single.single_inst.coef_n_i[-12]
+@28
+top.tb_single.single_inst.ready_o
+top.tb_single.single_inst.valid_i
+@22
+#{top.tb_single.single_inst.pos_x_i[7:0]} top.tb_single.single_inst.pos_x_i[7] top.tb_single.single_inst.pos_x_i[6] top.tb_single.single_inst.pos_x_i[5] top.tb_single.single_inst.pos_x_i[4] top.tb_single.single_inst.pos_x_i[3] top.tb_single.single_inst.pos_x_i[2] top.tb_single.single_inst.pos_x_i[1] top.tb_single.single_inst.pos_x_i[0]
+#{top.tb_single.single_inst.pos_y_i[7:0]} top.tb_single.single_inst.pos_y_i[7] top.tb_single.single_inst.pos_y_i[6] top.tb_single.single_inst.pos_y_i[5] top.tb_single.single_inst.pos_y_i[4] top.tb_single.single_inst.pos_y_i[3] top.tb_single.single_inst.pos_y_i[2] top.tb_single.single_inst.pos_y_i[1] top.tb_single.single_inst.pos_y_i[0]
+#{top.tb_single.single_inst.random_i[-1:-12]} top.tb_single.single_inst.random_i[-1] top.tb_single.single_inst.random_i[-2] top.tb_single.single_inst.random_i[-3] top.tb_single.single_inst.random_i[-4] top.tb_single.single_inst.random_i[-5] top.tb_single.single_inst.random_i[-6] top.tb_single.single_inst.random_i[-7] top.tb_single.single_inst.random_i[-8] top.tb_single.single_inst.random_i[-9] top.tb_single.single_inst.random_i[-10] top.tb_single.single_inst.random_i[-11] top.tb_single.single_inst.random_i[-12]
+#{top.tb_single.single_inst.ram_addr_o[15:0]} top.tb_single.single_inst.ram_addr_o[15] top.tb_single.single_inst.ram_addr_o[14] top.tb_single.single_inst.ram_addr_o[13] top.tb_single.single_inst.ram_addr_o[12] top.tb_single.single_inst.ram_addr_o[11] top.tb_single.single_inst.ram_addr_o[10] top.tb_single.single_inst.ram_addr_o[9] top.tb_single.single_inst.ram_addr_o[8] top.tb_single.single_inst.ram_addr_o[7] top.tb_single.single_inst.ram_addr_o[6] top.tb_single.single_inst.ram_addr_o[5] top.tb_single.single_inst.ram_addr_o[4] top.tb_single.single_inst.ram_addr_o[3] top.tb_single.single_inst.ram_addr_o[2] top.tb_single.single_inst.ram_addr_o[1] top.tb_single.single_inst.ram_addr_o[0]
+@28
+top.tb_single.single_inst.ram_wr_data_o
+top.tb_single.single_inst.ram_rd_data_i
+top.tb_single.single_inst.ram_wr_en_o
+@420
+top.tb_single.single_inst.state
+@22
+#{top.tb_single.single_inst.pos_x[7:0]} top.tb_single.single_inst.pos_x[7] top.tb_single.single_inst.pos_x[6] top.tb_single.single_inst.pos_x[5] top.tb_single.single_inst.pos_x[4] top.tb_single.single_inst.pos_x[3] top.tb_single.single_inst.pos_x[2] top.tb_single.single_inst.pos_x[1] top.tb_single.single_inst.pos_x[0]
+#{top.tb_single.single_inst.pos_y[7:0]} top.tb_single.single_inst.pos_y[7] top.tb_single.single_inst.pos_y[6] top.tb_single.single_inst.pos_y[5] top.tb_single.single_inst.pos_y[4] top.tb_single.single_inst.pos_y[3] top.tb_single.single_inst.pos_y[2] top.tb_single.single_inst.pos_y[1] top.tb_single.single_inst.pos_y[0]
+#{top.tb_single.single_inst.random[-1:-12]} top.tb_single.single_inst.random[-1] top.tb_single.single_inst.random[-2] top.tb_single.single_inst.random[-3] top.tb_single.single_inst.random[-4] top.tb_single.single_inst.random[-5] top.tb_single.single_inst.random[-6] top.tb_single.single_inst.random[-7] top.tb_single.single_inst.random[-8] top.tb_single.single_inst.random[-9] top.tb_single.single_inst.random[-10] top.tb_single.single_inst.random[-11] top.tb_single.single_inst.random[-12]
+@420
+top.tb_single.single_inst.neighbor_cnt
+@28
+top.tb_single.single_inst.cell
+top.tb_single.single_inst.valid
+top.tb_single.single_inst.prob_valid
+@22
+#{top.tb_single.single_inst.prob_numerator[7:-12]} top.tb_single.single_inst.prob_numerator[7] top.tb_single.single_inst.prob_numerator[6] top.tb_single.single_inst.prob_numerator[5] top.tb_single.single_inst.prob_numerator[4] top.tb_single.single_inst.prob_numerator[3] top.tb_single.single_inst.prob_numerator[2] top.tb_single.single_inst.prob_numerator[1] top.tb_single.single_inst.prob_numerator[0] top.tb_single.single_inst.prob_numerator[-1] top.tb_single.single_inst.prob_numerator[-2] top.tb_single.single_inst.prob_numerator[-3] top.tb_single.single_inst.prob_numerator[-4] top.tb_single.single_inst.prob_numerator[-5] top.tb_single.single_inst.prob_numerator[-6] top.tb_single.single_inst.prob_numerator[-7] top.tb_single.single_inst.prob_numerator[-8] top.tb_single.single_inst.prob_numerator[-9] top.tb_single.single_inst.prob_numerator[-10] top.tb_single.single_inst.prob_numerator[-11] top.tb_single.single_inst.prob_numerator[-12]
+#{top.tb_single.single_inst.prob_denominator[7:-12]} top.tb_single.single_inst.prob_denominator[7] top.tb_single.single_inst.prob_denominator[6] top.tb_single.single_inst.prob_denominator[5] top.tb_single.single_inst.prob_denominator[4] top.tb_single.single_inst.prob_denominator[3] top.tb_single.single_inst.prob_denominator[2] top.tb_single.single_inst.prob_denominator[1] top.tb_single.single_inst.prob_denominator[0] top.tb_single.single_inst.prob_denominator[-1] top.tb_single.single_inst.prob_denominator[-2] top.tb_single.single_inst.prob_denominator[-3] top.tb_single.single_inst.prob_denominator[-4] top.tb_single.single_inst.prob_denominator[-5] top.tb_single.single_inst.prob_denominator[-6] top.tb_single.single_inst.prob_denominator[-7] top.tb_single.single_inst.prob_denominator[-8] top.tb_single.single_inst.prob_denominator[-9] top.tb_single.single_inst.prob_denominator[-10] top.tb_single.single_inst.prob_denominator[-11] top.tb_single.single_inst.prob_denominator[-12]
+#{top.tb_single.single_inst.prob_numerator_d[7:-12]} top.tb_single.single_inst.prob_numerator_d[7] top.tb_single.single_inst.prob_numerator_d[6] top.tb_single.single_inst.prob_numerator_d[5] top.tb_single.single_inst.prob_numerator_d[4] top.tb_single.single_inst.prob_numerator_d[3] top.tb_single.single_inst.prob_numerator_d[2] top.tb_single.single_inst.prob_numerator_d[1] top.tb_single.single_inst.prob_numerator_d[0] top.tb_single.single_inst.prob_numerator_d[-1] top.tb_single.single_inst.prob_numerator_d[-2] top.tb_single.single_inst.prob_numerator_d[-3] top.tb_single.single_inst.prob_numerator_d[-4] top.tb_single.single_inst.prob_numerator_d[-5] top.tb_single.single_inst.prob_numerator_d[-6] top.tb_single.single_inst.prob_numerator_d[-7] top.tb_single.single_inst.prob_numerator_d[-8] top.tb_single.single_inst.prob_numerator_d[-9] top.tb_single.single_inst.prob_numerator_d[-10] top.tb_single.single_inst.prob_numerator_d[-11] top.tb_single.single_inst.prob_numerator_d[-12]
+#{top.tb_single.single_inst.prob_denominator_d[7:-12]} top.tb_single.single_inst.prob_denominator_d[7] top.tb_single.single_inst.prob_denominator_d[6] top.tb_single.single_inst.prob_denominator_d[5] top.tb_single.single_inst.prob_denominator_d[4] top.tb_single.single_inst.prob_denominator_d[3] top.tb_single.single_inst.prob_denominator_d[2] top.tb_single.single_inst.prob_denominator_d[1] top.tb_single.single_inst.prob_denominator_d[0] top.tb_single.single_inst.prob_denominator_d[-1] top.tb_single.single_inst.prob_denominator_d[-2] top.tb_single.single_inst.prob_denominator_d[-3] top.tb_single.single_inst.prob_denominator_d[-4] top.tb_single.single_inst.prob_denominator_d[-5] top.tb_single.single_inst.prob_denominator_d[-6] top.tb_single.single_inst.prob_denominator_d[-7] top.tb_single.single_inst.prob_denominator_d[-8] top.tb_single.single_inst.prob_denominator_d[-9] top.tb_single.single_inst.prob_denominator_d[-10] top.tb_single.single_inst.prob_denominator_d[-11] top.tb_single.single_inst.prob_denominator_d[-12]
+#{top.tb_single.single_inst.mult_tmp[7:-24]} top.tb_single.single_inst.mult_tmp[7] top.tb_single.single_inst.mult_tmp[6] top.tb_single.single_inst.mult_tmp[5] top.tb_single.single_inst.mult_tmp[4] top.tb_single.single_inst.mult_tmp[3] top.tb_single.single_inst.mult_tmp[2] top.tb_single.single_inst.mult_tmp[1] top.tb_single.single_inst.mult_tmp[0] top.tb_single.single_inst.mult_tmp[-1] top.tb_single.single_inst.mult_tmp[-2] top.tb_single.single_inst.mult_tmp[-3] top.tb_single.single_inst.mult_tmp[-4] top.tb_single.single_inst.mult_tmp[-5] top.tb_single.single_inst.mult_tmp[-6] top.tb_single.single_inst.mult_tmp[-7] top.tb_single.single_inst.mult_tmp[-8] top.tb_single.single_inst.mult_tmp[-9] top.tb_single.single_inst.mult_tmp[-10] top.tb_single.single_inst.mult_tmp[-11] top.tb_single.single_inst.mult_tmp[-12] top.tb_single.single_inst.mult_tmp[-13] top.tb_single.single_inst.mult_tmp[-14] top.tb_single.single_inst.mult_tmp[-15] top.tb_single.single_inst.mult_tmp[-16] top.tb_single.single_inst.mult_tmp[-17] top.tb_single.single_inst.mult_tmp[-18] top.tb_single.single_inst.mult_tmp[-19] top.tb_single.single_inst.mult_tmp[-20] top.tb_single.single_inst.mult_tmp[-21] top.tb_single.single_inst.mult_tmp[-22] top.tb_single.single_inst.mult_tmp[-23] top.tb_single.single_inst.mult_tmp[-24]
+#{top.tb_single.single_inst.mult_tmp_d[7:-24]} top.tb_single.single_inst.mult_tmp_d[7] top.tb_single.single_inst.mult_tmp_d[6] top.tb_single.single_inst.mult_tmp_d[5] top.tb_single.single_inst.mult_tmp_d[4] top.tb_single.single_inst.mult_tmp_d[3] top.tb_single.single_inst.mult_tmp_d[2] top.tb_single.single_inst.mult_tmp_d[1] top.tb_single.single_inst.mult_tmp_d[0] top.tb_single.single_inst.mult_tmp_d[-1] top.tb_single.single_inst.mult_tmp_d[-2] top.tb_single.single_inst.mult_tmp_d[-3] top.tb_single.single_inst.mult_tmp_d[-4] top.tb_single.single_inst.mult_tmp_d[-5] top.tb_single.single_inst.mult_tmp_d[-6] top.tb_single.single_inst.mult_tmp_d[-7] top.tb_single.single_inst.mult_tmp_d[-8] top.tb_single.single_inst.mult_tmp_d[-9] top.tb_single.single_inst.mult_tmp_d[-10] top.tb_single.single_inst.mult_tmp_d[-11] top.tb_single.single_inst.mult_tmp_d[-12] top.tb_single.single_inst.mult_tmp_d[-13] top.tb_single.single_inst.mult_tmp_d[-14] top.tb_single.single_inst.mult_tmp_d[-15] top.tb_single.single_inst.mult_tmp_d[-16] top.tb_single.single_inst.mult_tmp_d[-17] top.tb_single.single_inst.mult_tmp_d[-18] top.tb_single.single_inst.mult_tmp_d[-19] top.tb_single.single_inst.mult_tmp_d[-20] top.tb_single.single_inst.mult_tmp_d[-21] top.tb_single.single_inst.mult_tmp_d[-22] top.tb_single.single_inst.mult_tmp_d[-23] top.tb_single.single_inst.mult_tmp_d[-24]
+#{top.tb_single.single_inst.mult_numerator[7:-12]} top.tb_single.single_inst.mult_numerator[7] top.tb_single.single_inst.mult_numerator[6] top.tb_single.single_inst.mult_numerator[5] top.tb_single.single_inst.mult_numerator[4] top.tb_single.single_inst.mult_numerator[3] top.tb_single.single_inst.mult_numerator[2] top.tb_single.single_inst.mult_numerator[1] top.tb_single.single_inst.mult_numerator[0] top.tb_single.single_inst.mult_numerator[-1] top.tb_single.single_inst.mult_numerator[-2] top.tb_single.single_inst.mult_numerator[-3] top.tb_single.single_inst.mult_numerator[-4] top.tb_single.single_inst.mult_numerator[-5] top.tb_single.single_inst.mult_numerator[-6] top.tb_single.single_inst.mult_numerator[-7] top.tb_single.single_inst.mult_numerator[-8] top.tb_single.single_inst.mult_numerator[-9] top.tb_single.single_inst.mult_numerator[-10] top.tb_single.single_inst.mult_numerator[-11] top.tb_single.single_inst.mult_numerator[-12]
+@28
+top.tb_single.single_inst.update
+@1000200
+-single
+@800200
+-TB
+@28
+top.tb_single.running
+top.tb_single.clk
+top.tb_single.rst
+@22
+#{top.tb_single.single_coef_e[3:-12]} top.tb_single.single_coef_e[3] top.tb_single.single_coef_e[2] top.tb_single.single_coef_e[1] top.tb_single.single_coef_e[0] top.tb_single.single_coef_e[-1] top.tb_single.single_coef_e[-2] top.tb_single.single_coef_e[-3] top.tb_single.single_coef_e[-4] top.tb_single.single_coef_e[-5] top.tb_single.single_coef_e[-6] top.tb_single.single_coef_e[-7] top.tb_single.single_coef_e[-8] top.tb_single.single_coef_e[-9] top.tb_single.single_coef_e[-10] top.tb_single.single_coef_e[-11] top.tb_single.single_coef_e[-12]
+#{top.tb_single.single_coef_n[3:-12]} top.tb_single.single_coef_n[3] top.tb_single.single_coef_n[2] top.tb_single.single_coef_n[1] top.tb_single.single_coef_n[0] top.tb_single.single_coef_n[-1] top.tb_single.single_coef_n[-2] top.tb_single.single_coef_n[-3] top.tb_single.single_coef_n[-4] top.tb_single.single_coef_n[-5] top.tb_single.single_coef_n[-6] top.tb_single.single_coef_n[-7] top.tb_single.single_coef_n[-8] top.tb_single.single_coef_n[-9] top.tb_single.single_coef_n[-10] top.tb_single.single_coef_n[-11] top.tb_single.single_coef_n[-12]
+@28
+top.tb_single.single_ready
+top.tb_single.single_valid
+@23
+#{top.tb_single.single_pos_x[7:0]} top.tb_single.single_pos_x[7] top.tb_single.single_pos_x[6] top.tb_single.single_pos_x[5] top.tb_single.single_pos_x[4] top.tb_single.single_pos_x[3] top.tb_single.single_pos_x[2] top.tb_single.single_pos_x[1] top.tb_single.single_pos_x[0]
+@22
+#{top.tb_single.single_pos_y[7:0]} top.tb_single.single_pos_y[7] top.tb_single.single_pos_y[6] top.tb_single.single_pos_y[5] top.tb_single.single_pos_y[4] top.tb_single.single_pos_y[3] top.tb_single.single_pos_y[2] top.tb_single.single_pos_y[1] top.tb_single.single_pos_y[0]
+#{top.tb_single.single_random[-1:-12]} top.tb_single.single_random[-1] top.tb_single.single_random[-2] top.tb_single.single_random[-3] top.tb_single.single_random[-4] top.tb_single.single_random[-5] top.tb_single.single_random[-6] top.tb_single.single_random[-7] top.tb_single.single_random[-8] top.tb_single.single_random[-9] top.tb_single.single_random[-10] top.tb_single.single_random[-11] top.tb_single.single_random[-12]
+#{top.tb_single.ram_addr[15:0]} top.tb_single.ram_addr[15] top.tb_single.ram_addr[14] top.tb_single.ram_addr[13] top.tb_single.ram_addr[12] top.tb_single.ram_addr[11] top.tb_single.ram_addr[10] top.tb_single.ram_addr[9] top.tb_single.ram_addr[8] top.tb_single.ram_addr[7] top.tb_single.ram_addr[6] top.tb_single.ram_addr[5] top.tb_single.ram_addr[4] top.tb_single.ram_addr[3] top.tb_single.ram_addr[2] top.tb_single.ram_addr[1] top.tb_single.ram_addr[0]
+@28
+top.tb_single.ram_wr_data
+top.tb_single.ram_rd_data
+top.tb_single.ram_wr_en
+@22
+#{top.tb_single.tb_addr[15:0]} top.tb_single.tb_addr[15] top.tb_single.tb_addr[14] top.tb_single.tb_addr[13] top.tb_single.tb_addr[12] top.tb_single.tb_addr[11] top.tb_single.tb_addr[10] top.tb_single.tb_addr[9] top.tb_single.tb_addr[8] top.tb_single.tb_addr[7] top.tb_single.tb_addr[6] top.tb_single.tb_addr[5] top.tb_single.tb_addr[4] top.tb_single.tb_addr[3] top.tb_single.tb_addr[2] top.tb_single.tb_addr[1] top.tb_single.tb_addr[0]
+@28
+top.tb_single.tb_wr_data
+top.tb_single.tb_wr_en
+top.tb_single.tb_rd_en
+top.tb_single.tb_rd_data
+@1000200
+-TB
+[pattern_trace] 1
+[pattern_trace] 0

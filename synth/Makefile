@@ -1,5 +1,6 @@
 # List of source files
 SRC += $(SRC_DIR)/calc_prob.vhd
+SRC += $(SRC_DIR)/single.vhd
 SRC += $(SRC_DIR)/core.vhd
 SRC += $(SRC_DIR)/pow2_rom.vhd
 SRC += $(SRC_DIR)/pow2.vhd

@@ -105,17 +105,17 @@ set_false_path -from                     [get_ports sys_rst_i];                 
 
 set_multicycle_path 30 -setup \
    -from [get_clocks core_clk] \
-   -to   [get_cells -include_replicated {core_inst/coef_n_reg[*]}]
+   -to   [get_cells -include_replicated {core_inst/single_coef_n_reg[*]}]
 set_multicycle_path 30 -setup \
    -from [get_clocks core_clk] \
-   -to   [get_cells -include_replicated {core_inst/coef_e_reg[*]}]
+   -to   [get_cells -include_replicated {core_inst/single_coef_e_reg[*]}]
 
 set_multicycle_path 29 -hold \
    -from [get_clocks core_clk] \
-   -to   [get_cells -include_replicated {core_inst/coef_n_reg[*]}]
+   -to   [get_cells -include_replicated {core_inst/single_coef_n_reg[*]}]
 set_multicycle_path 29 -hold \
    -from [get_clocks core_clk] \
-   -to   [get_cells -include_replicated {core_inst/coef_e_reg[*]}]
+   -to   [get_cells -include_replicated {core_inst/single_coef_e_reg[*]}]
 
 
 ###############################################################################

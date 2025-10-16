@@ -52,6 +52,19 @@ architecture simulation of tb_calc_prob is
     return res_v;
   end function calc_hamil;
 
+  pure function calc_exp_prob (
+    neighbor_cnt_v : natural;
+    cell_v : natural
+  ) return real is
+    variable delta_hamil_v : real;
+    variable q_v           : real;
+  begin
+    delta_hamil_v := calc_hamil(real(neighbor_cnt_v), real(1 - cell_v)) -
+                     calc_hamil(real(neighbor_cnt_v), real(cell_v));
+    q_v           := exp(-delta_hamil_v / to_real(C_TEMPERATURE));
+    return q_v / (1.0 + q_v);
+  end function calc_exp_prob;
+
 begin
 
   clk <= running and not clk after 5 ns;
@@ -64,8 +77,6 @@ begin
       neighbor_cnt_v : natural;
       cell_v         : natural
     ) is
-      variable delta_hamil_v : real;
-      variable q_v           : real;
       variable exp_prob_v    : real;
       variable prob_v        : real;
       variable abs_diff_v    : real;
@@ -88,17 +99,11 @@ begin
 
       assert prob_denominator = resize(prob_numerator + 1, prob_denominator);
 
-      delta_hamil_v := calc_hamil(real(neighbor_cnt_v), real(1 - cell_v)) -
-                       calc_hamil(real(neighbor_cnt_v), real(cell_v));
+      exp_prob_v := calc_exp_prob(neighbor_cnt_v, cell_v);
+      prob_v     := to_real(prob_numerator) / to_real(prob_denominator);
 
-      q_v           := exp(-delta_hamil_v / to_real(C_TEMPERATURE));
-      -- report "q_expected=" & to_string(q_v);
-
-      exp_prob_v    := q_v / (1.0 + q_v);
-      prob_v        := to_real(prob_numerator) / to_real(prob_denominator);
-
-      abs_diff_v    := abs(prob_v - exp_prob_v);
-      rel_diff_v    := abs_diff_v / exp_prob_v;
+      abs_diff_v := abs(prob_v - exp_prob_v);
+      rel_diff_v := abs_diff_v / exp_prob_v;
 
       assert abs_diff_v < 1.0e-2 or rel_diff_v < 1.0e-2
         report "abs_diff_v=" & to_string(abs_diff_v) & " , " &
