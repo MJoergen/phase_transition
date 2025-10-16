@@ -10,10 +10,10 @@ SRC += $(SIM_SRC_DIR)/tb_calc_prob.vhd
 DUT = calc_prob
 
 # Test duration
-STOP_TIME = 5000ns
+STOP_TIME = 1us
 
 # Test specific generics
-GENERIC += -gG_ACCURACY=16
+GENERIC += -gG_ACCURACY=10
 
 include ../Makefile.inc
 

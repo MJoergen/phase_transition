@@ -9,22 +9,26 @@ SRC += $(SRC_DIR)/random.vhd
 # List of platform specific files
 SRC += $(PLATFORM_SRC_DIR)/clk_rst.vhd
 SRC += $(PLATFORM_SRC_DIR)/mega65/font.vhd
-SRC += $(PLATFORM_SRC_DIR)/mega65/mega65kbd_to_matrix.vhd
+SRC += $(PLATFORM_SRC_DIR)/mega65/kb_matrix_ram.vhdl
+SRC += $(PLATFORM_SRC_DIR)/mega65/m2m_keyb.vhd
+SRC += $(PLATFORM_SRC_DIR)/mega65/matrix_to_keynum.vhdl
+SRC += $(PLATFORM_SRC_DIR)/mega65/mega65kbd_to_matrix.vhdl
 SRC += $(PLATFORM_SRC_DIR)/mega65/video_chars.vhd
 SRC += $(PLATFORM_SRC_DIR)/mega65/video_modes_pkg.vhd
 SRC += $(PLATFORM_SRC_DIR)/mega65/video_sync.vhd
 SRC += $(PLATFORM_SRC_DIR)/mega65_wrapper.vhd
 SRC += $(PLATFORM_SRC_DIR)/tdp_ram.vhd
 SRC += $(PLATFORM_SRC_DIR)/top.vhd
+SRC += $(PLATFORM_SRC_DIR)/controller.vhd
 
 # Top level entity
 TOP = top
 
 # Test specific generics
-GENERICS += G_GRID_SIZE=8
-GENERICS += G_ADDR_BITS=4
-GENERICS += G_SCALING_BITS=4
-GENERICS += G_ACCURACY=8
+GENERICS += G_GRID_SIZE=128
+GENERICS += G_ADDR_BITS=8
+GENERICS += G_SCALING_BITS=3
+GENERICS += G_ACCURACY=10
 
 include Makefile.inc
 

@@ -20,8 +20,8 @@ architecture simulation of tb_calc_prob is
   constant C_TEMPERATURE  : ufixed(G_ACCURACY downto -G_ACCURACY) := to_ufixed(0.3, G_ACCURACY, -G_ACCURACY);
   constant C_NEG_CHEM_POT : ufixed(G_ACCURACY downto -G_ACCURACY) := to_ufixed(1.5, G_ACCURACY, -G_ACCURACY);
 
-  constant C_LN2_RECIP_REAL : real                    := 1.442695041;
-  constant C_LN2_RECIP : ufixed(2 downto -G_ACCURACY) := to_ufixed(C_LN2_RECIP_REAL, 2, -G_ACCURACY);
+  constant C_LN2_RECIP_REAL : real                                := 1.442695041;
+  constant C_LN2_RECIP      : ufixed(2 downto -G_ACCURACY)        := to_ufixed(C_LN2_RECIP_REAL, 2, -G_ACCURACY);
 
   signal   coef_e           : ufixed(3 downto -G_ACCURACY);
   signal   coef_n           : ufixed(3 downto -G_ACCURACY);
@@ -66,12 +66,17 @@ begin
     ) is
       variable delta_hamil_v : real;
       variable q_v           : real;
-      variable diff_v        : real;
+      variable exp_prob_v    : real;
+      variable prob_v        : real;
+      variable abs_diff_v    : real;
+      variable rel_diff_v    : real;
     begin
       neighbor_cnt <= neighbor_cnt_v;
       cell         <= '0' when cell_v = 0 else '1';
       valid        <= '1';
       wait until rising_edge(clk);
+      neighbor_cnt <= 0;
+      cell         <= '0';
       valid        <= '0';
 
       for i in 1 to work.calc_prob'latency loop
@@ -89,9 +94,16 @@ begin
       q_v           := exp(-delta_hamil_v / to_real(C_TEMPERATURE));
       -- report "q_expected=" & to_string(q_v);
 
-      diff_v        := (1.0 + q_v) - to_real(prob_denominator);
+      exp_prob_v    := q_v / (1.0 + q_v);
+      prob_v        := to_real(prob_numerator) / to_real(prob_denominator);
 
-      report "diff_v=" & to_string(diff_v);
+      abs_diff_v    := abs(prob_v - exp_prob_v);
+      rel_diff_v    := abs_diff_v / exp_prob_v;
+
+      assert abs_diff_v < 1.0e-2 or rel_diff_v < 1.0e-2
+        report "abs_diff_v=" & to_string(abs_diff_v) & " , " &
+               "rel_diff_v=" & to_string(rel_diff_v);
+
     --
     end procedure verify;
 
@@ -109,8 +121,8 @@ begin
     wait until rst = '0';
     wait until rising_edge(clk);
 
-    report "coef_e=" & to_string(to_real(coef_e));
-    report "coef_n=" & to_string(to_real(coef_n));
+    --    report "coef_e=" & to_string(to_real(coef_e));
+    --    report "coef_n=" & to_string(to_real(coef_n));
 
     assert prob_valid = '0';
 

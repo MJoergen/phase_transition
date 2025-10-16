@@ -33,16 +33,16 @@ begin
   mmcme2_base_inst : component mmcme2_base
     generic map (
       BANDWIDTH          => "OPTIMIZED",
-      CLKFBOUT_MULT_F    => 13.500,   -- 1350 MHz
+      CLKFBOUT_MULT_F    => 37.125,   -- 928.125 MHz
       CLKFBOUT_PHASE     => 0.000,
       CLKIN1_PERIOD      => 10.0,     -- INPUT @ 100 MHz
-      CLKOUT0_DIVIDE_F   => 6.750,    -- OUTPUT @ 200 MHz
+      CLKOUT0_DIVIDE_F   => 12.500,   -- OUTPUT @ 74.25 MHz
       CLKOUT0_DUTY_CYCLE => 0.500,
       CLKOUT0_PHASE      => 0.000,
-      CLKOUT1_DIVIDE     => 50,       -- OUTPUT @ 27 MHz
+      CLKOUT1_DIVIDE     => 3,        -- OUTPUT @ 309.375 MHz
       CLKOUT1_DUTY_CYCLE => 0.500,
       CLKOUT1_PHASE      => 0.000,
-      DIVCLK_DIVIDE      => 1,
+      DIVCLK_DIVIDE      => 4,
       REF_JITTER1        => 0.010,
       STARTUP_WAIT       => FALSE
     )
@@ -51,8 +51,8 @@ begin
       clkfbin  => pll_fb,
       rst      => sys_rst_i,
       pwrdwn   => '0',
-      clkout0  => pll_core_clk,
-      clkout1  => pll_vga_clk,
+      clkout0  => pll_vga_clk,
+      clkout1  => pll_core_clk,
       clkfbout => pll_fb,
       locked   => pll_locked
     ); -- mmcme2_base_inst : component mmcme2_base

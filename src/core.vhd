@@ -13,9 +13,10 @@ entity core is
   port (
     clk_i          : in    std_logic;
     rst_i          : in    std_logic;
-    step_i         : in    std_logic;
+    valid_i        : in    std_logic;
     temperature_i  : in    ufixed(-1 downto -G_ACCURACY); -- [0, 1[
     neg_chem_pot_i : in    ufixed(1 downto -G_ACCURACY);  -- [0, 4[
+    step_i         : in    std_logic;
     ram_addr_o     : out   std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
     ram_wr_data_o  : out   std_logic;
     ram_rd_data_i  : in    std_logic;
@@ -25,56 +26,43 @@ end entity core;
 
 architecture synthesis of core is
 
-  alias  ram_addr_x_o : std_logic_vector(G_ADDR_BITS - 1 downto 0) is ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS);
-  alias  ram_addr_y_o : std_logic_vector(G_ADDR_BITS - 1 downto 0) is ram_addr_o(G_ADDR_BITS - 1 downto 0);
+  constant C_LN2 : real                                      := 0.6931471805599453;
 
-  type   state_type is (INIT_ST, IDLE_ST, STEP1_ST, STEP2_ST, STEP3_ST, STEP4_ST, STEP5_ST, STEP6_ST, STEP7_ST, STEP8_ST, STEP9_ST);
-  signal state : state_type := INIT_ST;
+  alias    ram_addr_x_o : std_logic_vector(G_ADDR_BITS - 1 downto 0) is ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS);
+  alias    ram_addr_y_o : std_logic_vector(G_ADDR_BITS - 1 downto 0) is ram_addr_o(G_ADDR_BITS - 1 downto 0);
 
-  signal cnt : natural range 0 to 10;
+  type     state_type is (
+    INIT_ST, IDLE_ST, STEP1_ST, STEP2_ST, STEP3_ST, STEP4_ST,
+    STEP5_ST, STEP6_ST, STEP7_ST, STEP8_ST, STEP9_ST, STEP10_ST, STEP11_ST, STEP12_ST
+  );
+  signal   state : state_type                                := INIT_ST;
 
-  signal pos_x : unsigned(G_ADDR_BITS - 1 downto 0);
-  signal pos_y : unsigned(G_ADDR_BITS - 1 downto 0);
+  signal   cnt : natural range 0 to 10;
 
-  signal coef_e             : ufixed(3 downto -G_ACCURACY);
-  signal coef_n             : ufixed(3 downto -G_ACCURACY);
-  signal neighbor_cnt       : natural range 0 to 4;
-  signal cell               : std_logic;
-  signal valid              : std_logic;
-  signal prob_numerator     : ufixed(7 downto -G_ACCURACY);
-  signal prob_denominator   : ufixed(7 downto -G_ACCURACY);
-  signal prob_numerator_d   : ufixed(7 downto -G_ACCURACY);
-  signal prob_denominator_d : ufixed(7 downto -G_ACCURACY);
-  signal prob_valid         : std_logic;
+  signal   temperature  : ufixed(-1 downto -G_ACCURACY);
+  signal   neg_chem_pot : ufixed(1 downto -G_ACCURACY);
 
-  signal rand_output : std_logic_vector(63 downto 0);
-  signal random_d    : ufixed(-1 downto -G_ACCURACY);
-  signal mult        : ufixed(2 downto -G_ACCURACY);
+  signal   pos_x : unsigned(G_ADDR_BITS - 1 downto 0);
+  signal   pos_y : unsigned(G_ADDR_BITS - 1 downto 0);
 
-  pure function mult_prob (
-    r : ufixed;
-    m : ufixed
-  ) return ufixed is
-    variable tmp_v : unsigned(31 downto 0);
-  begin
-    return r * m;
-  end function mult_prob;
+  signal   coef_e             : ufixed(3 downto -G_ACCURACY);
+  signal   coef_n             : ufixed(3 downto -G_ACCURACY);
+  signal   neighbor_cnt       : natural range 0 to 4;
+  signal   cell               : std_logic;
+  signal   valid              : std_logic;
+  signal   prob_numerator     : ufixed(7 downto -G_ACCURACY);
+  signal   prob_denominator   : ufixed(7 downto -G_ACCURACY);
+  signal   prob_numerator_d   : ufixed(7 downto -G_ACCURACY);
+  signal   prob_denominator_d : ufixed(7 downto -G_ACCURACY) := (others => '0');
+  signal   prob_valid         : std_logic;
 
---  attribute mark_debug : string;
---  attribute mark_debug of step_i           : signal is "true";
---  attribute mark_debug of ram_addr_o       : signal is "true";
---  attribute mark_debug of ram_wr_data_o    : signal is "true";
---  attribute mark_debug of ram_rd_data_i    : signal is "true";
---  attribute mark_debug of ram_wr_en_o      : signal is "true";
---  attribute mark_debug of state            : signal is "true";
---  attribute mark_debug of cnt              : signal is "true";
---  attribute mark_debug of pos_x            : signal is "true";
---  attribute mark_debug of pos_y            : signal is "true";
---  attribute mark_debug of neighbor_cnt     : signal is "true";
---  attribute mark_debug of cell             : signal is "true";
---  attribute mark_debug of prob_numerator   : signal is "true";
---  attribute mark_debug of prob_denominator : signal is "true";
---  attribute mark_debug of rand_output      : signal is "true";
+  signal   rand_output    : std_logic_vector(63 downto 0);
+  signal   rand_output_d  : std_logic_vector(63 downto 0);
+  signal   random_d       : ufixed(-1 downto -G_ACCURACY);
+  signal   mult_tmp       : ufixed(7 downto -2 * G_ACCURACY);
+  signal   mult_tmp_d     : ufixed(7 downto -2 * G_ACCURACY);
+  signal   mult_numerator : ufixed(7 downto -G_ACCURACY)     := (others => '0');
+  signal   update         : std_logic;
 
 begin
 
@@ -85,16 +73,18 @@ begin
     variable rand_y_v    : ufixed(-1 downto -G_ADDR_BITS);
   begin
     if rising_edge(clk_i) then
-      ram_wr_en_o <= '0';
-      valid       <= '0';
+      rand_output_d <= rand_output;
+      ram_wr_en_o   <= '0';
+      valid         <= '0';
+      update        <= '1' when mult_numerator < prob_denominator_d else '0';
 
       case state is
 
         when IDLE_ST =>
           if step_i = '1' then
             -- Get two random values in the range [0, 1[.
-            rand_x_v     := to_ufixed(rand_output(G_ADDR_BITS + 40 - 1 downto 40), rand_x_v);
-            rand_y_v     := to_ufixed(rand_output(G_ADDR_BITS + 20 - 1 downto 20), rand_y_v);
+            rand_x_v     := to_ufixed(rand_output_d(G_ADDR_BITS + 20 - 1 downto 20), rand_x_v);
+            rand_y_v     := to_ufixed(rand_output_d(G_ADDR_BITS + 10 - 1 downto 10), rand_y_v);
 
             -- Find random site
             new_pos_x_v  := unsigned(resize(rand_x_v * to_ufixed(G_GRID_SIZE, G_ADDR_BITS - 1, 0), G_ADDR_BITS - 1, 0));
@@ -178,18 +168,29 @@ begin
 
         when STEP7_ST =>
           if prob_valid = '1' then
-            random_d           <= to_ufixed(rand_output(31 downto 32 - G_ACCURACY), random_d);
+            random_d           <= to_ufixed(rand_output_d(G_ACCURACY - 1 downto 0), random_d);
             prob_numerator_d   <= prob_numerator;
             prob_denominator_d <= prob_denominator;
             state              <= STEP8_ST;
           end if;
 
         when STEP8_ST =>
-          mult  <= resize(random_d * prob_numerator_d, mult);
-          state <= STEP9_ST;
+          mult_tmp <= random_d * prob_numerator_d;
+          state    <= STEP9_ST;
 
         when STEP9_ST =>
-          if mult < prob_denominator_d then
+          mult_tmp_d <= mult_tmp;
+          state      <= STEP10_ST;
+
+        when STEP10_ST =>
+          mult_numerator <= resize(mult_tmp_d, prob_denominator_d);
+          state          <= STEP11_ST;
+
+        when STEP11_ST =>
+          state <= STEP12_ST;
+
+        when STEP12_ST =>
+          if update then
             ram_addr_x_o  <= std_logic_vector(pos_x);
             ram_addr_y_o  <= std_logic_vector(pos_y);
             ram_wr_data_o <= not cell;
@@ -215,6 +216,21 @@ begin
     end if;
   end process state_proc;
 
+  coef_proc : process (clk_i)
+  begin
+    if rising_edge(clk_i) then
+      neg_chem_pot <= neg_chem_pot_i;
+      temperature  <= temperature_i;
+
+      if valid_i = '1' then
+        -- This generates a huge combinatorial network, but since this is not timing
+        -- critical, a set_multicycle_path timing exception is used.
+        coef_e <= resize(C_LN2 / temperature, coef_e);
+        coef_n <= resize(C_LN2 * neg_chem_pot / temperature_i, coef_n);
+      end if;
+    end if;
+  end process coef_proc;
+
   random_inst : entity work.random
     generic map (
       G_SEED => X"DEADBEEFC007BABE"
@@ -225,9 +241,6 @@ begin
       update_i => '1',
       output_o => rand_output
     ); -- random_inst : entity work.random
-
-  coef_e <= resize(temperature_i, coef_e);  -- TBD
-  coef_n <= resize(neg_chem_pot_i, coef_n); -- TBD
 
   calc_prob_inst : entity work.calc_prob
     generic map (

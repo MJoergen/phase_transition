@@ -52,9 +52,9 @@ set_property PACKAGE_PIN V14  [get_ports vga_vs_o               ];            # 
 
 set_property -dict {IOSTANDARD LVCMOS33          }  [get_ports sys_clk_i           ];
 set_property -dict {IOSTANDARD LVCMOS33          }  [get_ports sys_rst_i           ];
-set_property -dict {IOSTANDARD LVCMOS33  IOB TRUE}  [get_ports kb_io0_o            ];
-set_property -dict {IOSTANDARD LVCMOS33  IOB TRUE}  [get_ports kb_io1_o            ];
-set_property -dict {IOSTANDARD LVCMOS33  IOB TRUE}  [get_ports kb_io2_i            ];
+set_property -dict {IOSTANDARD LVCMOS33          }  [get_ports kb_io0_o            ];
+set_property -dict {IOSTANDARD LVCMOS33          }  [get_ports kb_io1_o            ];
+set_property -dict {IOSTANDARD LVCMOS33          }  [get_ports kb_io2_i            ];
 
 set_property -dict {IOSTANDARD LVCMOS33  IOB TRUE}  [get_ports vdac_clk_o          ];
 set_property -dict {IOSTANDARD LVCMOS33          }  [get_ports vdac_blank_n_o      ];
@@ -93,8 +93,8 @@ set_property -dict {IOSTANDARD LVCMOS33  IOB TRUE}  [get_ports vga_vs_o         
 ###############################################################################
 
 create_clock           -name clk   -period 10 [get_ports sys_clk_i];
-create_generated_clock -name core_clk         [get_pins  clk_rst_inst/mmcme2_base_inst/CLKOUT0];
-create_generated_clock -name vga_clk          [get_pins  clk_rst_inst/mmcme2_base_inst/CLKOUT1];
+create_generated_clock -name vga_clk          [get_pins  clk_rst_inst/mmcme2_base_inst/CLKOUT0];
+create_generated_clock -name core_clk         [get_pins  clk_rst_inst/mmcme2_base_inst/CLKOUT1];
 
 
 ###############################################################################
@@ -102,6 +102,20 @@ create_generated_clock -name vga_clk          [get_pins  clk_rst_inst/mmcme2_bas
 ###############################################################################
 
 set_false_path -from                     [get_ports sys_rst_i];                         # Asynchronous reset
+
+set_multicycle_path 30 -setup \
+   -from [get_clocks core_clk] \
+   -to   [get_cells -include_replicated {core_inst/coef_n_reg[*]}]
+set_multicycle_path 30 -setup \
+   -from [get_clocks core_clk] \
+   -to   [get_cells -include_replicated {core_inst/coef_e_reg[*]}]
+
+set_multicycle_path 29 -hold \
+   -from [get_clocks core_clk] \
+   -to   [get_cells -include_replicated {core_inst/coef_n_reg[*]}]
+set_multicycle_path 29 -hold \
+   -from [get_clocks core_clk] \
+   -to   [get_cells -include_replicated {core_inst/coef_e_reg[*]}]
 
 
 ###############################################################################

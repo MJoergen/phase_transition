@@ -15,7 +15,7 @@ end entity tb_core;
 architecture simulation of tb_core is
 
   constant C_INITIAL_TEMPERATURE : real                := 0.3;
-  constant C_INITIAL_CHEM_POT    : real                := -2.5;
+  constant C_INITIAL_CHEM_POT    : real                := -1.5;
 
   signal   running : std_logic                         := '1';
   signal   clk     : std_logic                         := '1';
@@ -24,7 +24,8 @@ architecture simulation of tb_core is
   -- Temperature is limited to [0, 1[
   signal   temperature : ufixed(-1 downto -G_ACCURACY) := to_ufixed(C_INITIAL_TEMPERATURE, -1, -G_ACCURACY);
 
-  -- Chemical Potential is limited to ]-4, 0]. The sign is discarded (it's implicit).
+  -- Negative Chemical Potential is limited to [0, 4[.
+  -- The sign is discarded (it's implicit).
   signal   neg_chem_pot : ufixed(1 downto -G_ACCURACY) := to_ufixed(-C_INITIAL_CHEM_POT, 1, -G_ACCURACY);
 
   signal   ram_addr    : std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
@@ -32,10 +33,50 @@ architecture simulation of tb_core is
   signal   ram_rd_data : std_logic;
   signal   ram_wr_en   : std_logic;
 
+  signal   step       : std_logic;
+  signal   valid      : std_logic;
+  signal   tb_addr    : std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
+  signal   tb_wr_data : std_logic;
+  signal   tb_wr_en   : std_logic;
+
 begin
 
   clk <= running and not clk after 5 ns;
   rst <= '1', '0' after 100 ns;
+
+  test_proc : process
+  begin
+    tb_wr_en     <= '0';
+    step         <= '0';
+    valid        <= '0';
+    wait until rst = '0';
+    wait for 100 ns;
+    wait until rising_edge(clk);
+
+    temperature  <= to_ufixed(C_INITIAL_TEMPERATURE, -1, -G_ACCURACY);
+    neg_chem_pot <= to_ufixed(-C_INITIAL_CHEM_POT, 1, -G_ACCURACY);
+    valid        <= '1';
+    wait until rising_edge(clk);
+    valid        <= '0';
+    wait until rising_edge(clk);
+
+    for i in 1 to 5 loop
+      wait until rising_edge(clk);
+    end loop;
+
+    -- Write data to RAM
+
+    step <= '1';
+    wait until rising_edge(clk);
+    step <= '0';
+    wait until rising_edge(clk);
+
+    for i in 1 to 20 loop
+      wait until rising_edge(clk);
+    end loop;
+
+    wait;
+  end process test_proc;
 
   core_inst : entity work.core
     generic map (
@@ -46,9 +87,10 @@ begin
     port map (
       clk_i          => clk,
       rst_i          => rst,
-      step_i         => '1',
+      valid_i        => valid,
       temperature_i  => temperature,
       neg_chem_pot_i => neg_chem_pot,
+      step_i         => step,
       ram_addr_o     => ram_addr,
       ram_wr_data_o  => ram_wr_data,
       ram_rd_data_i  => ram_rd_data,
@@ -57,6 +99,8 @@ begin
 
   tdp_ram_inst : entity work.tdp_ram
     generic map (
+      G_A_LATENCY => 2,
+      G_B_LATENCY => 2,
       G_ADDR_SIZE => 2 * G_ADDR_BITS,
       G_DATA_SIZE => 1
     )
@@ -68,12 +112,12 @@ begin
       a_wr_data_i(0) => ram_wr_data,
       a_rd_en_i      => '1',
       a_rd_data_o(0) => ram_rd_data,
-      b_clk_i        => '0',
-      b_rst_i        => '0',
-      b_addr_i       => (others => '0'),
-      b_wr_en_i      => '0',
-      b_wr_data_i    => (others => '0'),
-      b_rd_en_i      => '1',
+      b_clk_i        => clk,
+      b_rst_i        => rst,
+      b_addr_i       => tb_addr,
+      b_wr_en_i      => tb_wr_en,
+      b_wr_data_i(0) => tb_wr_data,
+      b_rd_en_i      => '0',
       b_rd_data_o    => open
     ); -- tdp_ram_inst : entity work.tdp_ram
 

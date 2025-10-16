@@ -28,9 +28,8 @@ entity calc_prob is
     prob_denominator_o : out   ufixed(7 downto -G_ACCURACY);
     valid_o            : out   std_logic
   );
-
   attribute latency : natural;
-  attribute latency of calc_prob : entity is 3;
+  attribute latency of calc_prob : entity is work.pow2'latency + 2;
 end entity calc_prob;
 
 architecture synthesis of calc_prob is
@@ -72,47 +71,56 @@ architecture synthesis of calc_prob is
     coef_e       : ufixed(3 downto -G_ACCURACY);
     coef_n       : ufixed(3 downto -G_ACCURACY)
   ) return sfixed is
-    variable energy_loss_v : integer range -4 to 4;
-    variable number_loss_v : integer range -1 to 1;
-    variable res_v         : sfixed(8 downto -G_ACCURACY);
-    variable res2_v        : sfixed(9 downto -G_ACCURACY);
+    variable res_v  : sfixed(7 downto -G_ACCURACY);
+    variable res2_v : sfixed(8 downto -G_ACCURACY);
   begin
-    energy_loss_v := energy_loss(neighbor_cnt, cell);
-    number_loss_v := number_loss(neighbor_cnt, cell);
+    res_v := to_sfixed(coef_e * to_ufixed(neighbor_cnt, 2, 0));
 
-    res_v         := to_sfixed(energy_loss_v, 3, 0) * to_sfixed(coef_e);
-
-    if number_loss_v = 1 then
-      res2_v := res_v + to_sfixed(coef_n);
-    else
+    if cell = '0' then
       res2_v := res_v - to_sfixed(coef_n);
+    else
+      res2_v := to_sfixed(coef_n) - res_v;
     end if;
-
-    report "neighbor_cnt=" & to_string(neighbor_cnt) & ", cell=" & to_string(cell) &
-           ", energy_loss_v=" & to_string(energy_loss_v) & ", number_loss_v=" & to_string(number_loss_v) &
-           " -> " & to_string(to_real(res2_v));
 
     return res2_v;
   end function calc_lnq;
 
-  signal   lnq       : sfixed(9 downto -G_ACCURACY) := (others => '0');
+  signal   coef_e : ufixed(3 downto -G_ACCURACY);
+  signal   coef_n : ufixed(3 downto -G_ACCURACY);
+
+  signal   valid : std_logic;
+  signal   cell  : std_logic;
+
+  signal   lnq       : sfixed(8 downto -G_ACCURACY) := (others => '0');
   signal   lnq_valid : std_logic;
 
   signal   pow2_arg : sfixed(4 downto -G_ACCURACY);
   signal   pow2_res : ufixed(7 downto -G_ACCURACY);
+
+  signal   res : sfixed(7 downto -G_ACCURACY);
 
 begin
 
   calc_proc : process (clk_i)
   begin
     if rising_edge(clk_i) then
+      coef_e <= coef_e_i;
+      coef_n <= coef_n_i;
+      valid  <= valid_i;
+
       if valid_i = '1' then
-        lnq <= calc_lnq(neighbor_cnt_i,
-                        cell_i,
-                        coef_e_i,
-                        coef_n_i);
+        res  <= to_sfixed(coef_e * to_ufixed(neighbor_cnt_i, 2, 0));
+        cell <= cell_i;
       end if;
-      lnq_valid <= valid_i;
+
+      if valid = '1' then
+        if cell = '0' then
+          lnq <= res - to_sfixed(coef_n);
+        else
+          lnq <= to_sfixed(coef_n) - res;
+        end if;
+      end if;
+      lnq_valid <= valid;
 
       if rst_i = '1' then
         lnq_valid <= '0';

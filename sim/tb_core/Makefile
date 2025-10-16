@@ -14,12 +14,12 @@ SRC += $(PLATFORM_SRC_DIR)/tdp_ram.vhd
 DUT = core
 
 # Test duration
-STOP_TIME = 2000ns
+STOP_TIME = 1us
 
 # Test specific generics
 GENERIC += -gG_GRID_SIZE=8
-GENERIC += -gG_ADDR_BITS=4
-GENERIC += -gG_ACCURACY=4
+GENERIC += -gG_ADDR_BITS=8
+GENERIC += -gG_ACCURACY=12
 
 include ../Makefile.inc
 

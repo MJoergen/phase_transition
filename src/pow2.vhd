@@ -31,19 +31,19 @@ entity pow2 is
     res_o   : out   ufixed(7 downto -G_ACCURACY)
   );
   attribute latency : natural;
-  attribute latency of pow2 : entity is 2;
+  attribute latency of pow2 : entity is work.pow2_rom'latency + 1;
 end entity pow2;
 
 architecture synthesis of pow2 is
 
-  constant C_ADDR_SIZE : natural                      := G_ACCURACY;
-  constant C_DATA_SIZE : natural                      := G_ACCURACY;
+  constant C_ADDR_SIZE : natural := G_ACCURACY;
+  constant C_DATA_SIZE : natural := G_ACCURACY;
 
-  signal   shift       : integer range -16 to 15;
-  signal   shift_valid : std_logic;
+  signal   shift : integer range -16 to 15;
 
-  signal   addr : std_logic_vector(C_ADDR_SIZE - 1 downto 0);
-  signal   data : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+  signal   pow2_addr  : std_logic_vector(C_ADDR_SIZE - 1 downto 0);
+  signal   pow2_data  : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+  signal   pow2_valid : std_logic;
 
 begin
 
@@ -53,7 +53,7 @@ begin
   -- The data represents a number in the range [0, 1[.
   ------------------------------------
 
-  addr    <= to_slv(arg_i(-1 downto -G_ACCURACY));
+  pow2_addr <= to_slv(arg_i(-1 downto -G_ACCURACY));
 
   pow2_rom_inst : entity work.pow2_rom
     generic map (
@@ -61,19 +61,19 @@ begin
       G_DATA_SIZE => C_DATA_SIZE
     )
     port map (
-      clk_i  => clk_i,
-      addr_i => addr,
-      data_o => data
+      clk_i   => clk_i,
+      rst_i   => rst_i,
+      valid_i => valid_i,
+      addr_i  => pow2_addr,
+      valid_o => pow2_valid,
+      data_o  => pow2_data
     ); -- pow2_rom_inst : entity work.pow2_rom
 
   first_proc : process (clk_i)
   begin
     if rising_edge(clk_i) then
-      shift       <= to_integer(signed(arg_i(4 downto 0)));
-      shift_valid <= valid_i;
-
-      if rst_i = '1' then
-        shift_valid <= '0';
+      if valid_i = '1' then
+        shift <= to_integer(signed(arg_i(4 downto 0)));
       end if;
     end if;
   end process first_proc;
@@ -86,7 +86,9 @@ begin
   second_proc : process (clk_i)
   begin
     if rising_edge(clk_i) then
-      if shift_valid = '1' then
+      valid_o <= pow2_valid;
+
+      if pow2_valid = '1' then
 
         case shift is
 
@@ -94,52 +96,52 @@ begin
             res_o <= to_ufixed(0, res_o);
 
           when -8 =>
-            res_o <= to_ufixed("0000000000000001" & data(C_DATA_SIZE - 1 downto 8), res_o);
+            res_o <= to_ufixed("0000000000000001" & pow2_data(C_DATA_SIZE - 1 downto 8), res_o);
 
           when -7 =>
-            res_o <= to_ufixed("000000000000001" & data(C_DATA_SIZE - 1 downto 7), res_o);
+            res_o <= to_ufixed("000000000000001" & pow2_data(C_DATA_SIZE - 1 downto 7), res_o);
 
           when -6 =>
-            res_o <= to_ufixed("00000000000001" & data(C_DATA_SIZE - 1 downto 6), res_o);
+            res_o <= to_ufixed("00000000000001" & pow2_data(C_DATA_SIZE - 1 downto 6), res_o);
 
           when -5 =>
-            res_o <= to_ufixed("0000000000001" & data(C_DATA_SIZE - 1 downto 5), res_o);
+            res_o <= to_ufixed("0000000000001" & pow2_data(C_DATA_SIZE - 1 downto 5), res_o);
 
           when -4 =>
-            res_o <= to_ufixed("000000000001" & data(C_DATA_SIZE - 1 downto 4), res_o);
+            res_o <= to_ufixed("000000000001" & pow2_data(C_DATA_SIZE - 1 downto 4), res_o);
 
           when -3 =>
-            res_o <= to_ufixed("00000000001" & data(C_DATA_SIZE - 1 downto 3), res_o);
+            res_o <= to_ufixed("00000000001" & pow2_data(C_DATA_SIZE - 1 downto 3), res_o);
 
           when -2 =>
-            res_o <= to_ufixed("0000000001" & data(C_DATA_SIZE - 1 downto 2), res_o);
+            res_o <= to_ufixed("0000000001" & pow2_data(C_DATA_SIZE - 1 downto 2), res_o);
 
           when -1 =>
-            res_o <= to_ufixed("000000001" & data(C_DATA_SIZE - 1 downto 1), res_o);
+            res_o <= to_ufixed("000000001" & pow2_data(C_DATA_SIZE - 1 downto 1), res_o);
 
           when 0 =>
-            res_o <= to_ufixed("00000001" & data, res_o);
+            res_o <= to_ufixed("00000001" & pow2_data, res_o);
 
           when 1 =>
-            res_o <= to_ufixed("0000001" & data & "0", res_o);
+            res_o <= to_ufixed("0000001" & pow2_data & "0", res_o);
 
           when 2 =>
-            res_o <= to_ufixed("000001" & data & "00", res_o);
+            res_o <= to_ufixed("000001" & pow2_data & "00", res_o);
 
           when 3 =>
-            res_o <= to_ufixed("00001" & data & "000", res_o);
+            res_o <= to_ufixed("00001" & pow2_data & "000", res_o);
 
           when 4 =>
-            res_o <= to_ufixed("0001" & data & "0000", res_o);
+            res_o <= to_ufixed("0001" & pow2_data & "0000", res_o);
 
           when 5 =>
-            res_o <= to_ufixed("001" & data & "00000", res_o);
+            res_o <= to_ufixed("001" & pow2_data & "00000", res_o);
 
           when 6 =>
-            res_o <= to_ufixed("01" & data & "000000", res_o);
+            res_o <= to_ufixed("01" & pow2_data & "000000", res_o);
 
           when 7 =>
-            res_o <= to_ufixed("1" & data & "0000000", res_o);
+            res_o <= to_ufixed("1" & pow2_data & "0000000", res_o);
 
           when 8 to 15 =>
             res_o <= (others => '1');
@@ -150,7 +152,6 @@ begin
         end case;
 
       end if;
-      valid_o <= shift_valid;
 
       if rst_i = '1' then
         valid_o <= '0';

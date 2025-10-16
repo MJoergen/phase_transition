@@ -5,6 +5,8 @@ library ieee;
 
 entity tdp_ram is
   generic (
+    G_A_LATENCY : natural range 1 to 2;
+    G_B_LATENCY : natural range 1 to 2;
     G_INIT_FILE : string := "";
     G_RAM_STYLE : string := "block";
     G_ADDR_SIZE : integer;
@@ -59,19 +61,32 @@ architecture synthesis of tdp_ram is
   end function initramfromfile;
 
   -- Initial memory contents
-  shared variable ram_v : ram_type := initramfromfile(G_INIT_FILE);
+  shared variable ram_v : ram_type                                       := initramfromfile(G_INIT_FILE);
 
   attribute ram_style : string;
   attribute ram_style of ram_v : variable is G_RAM_STYLE;
+
+  signal          a_rd_data : std_logic_vector(G_DATA_SIZE - 1 downto 0) := (others => '0');
+  signal          b_rd_data : std_logic_vector(G_DATA_SIZE - 1 downto 0) := (others => '0');
 
 begin
 
   a_proc : process (a_clk_i)
   begin
     if rising_edge(a_clk_i) then
-      if a_rd_en_i = '1' then
-        a_rd_data_o <= ram_v(to_integer(a_addr_i));
+      if G_A_LATENCY = 1 then
+        if a_rd_en_i = '1' then
+          a_rd_data_o <= ram_v(to_integer(a_addr_i));
+        end if;
+      elsif G_A_LATENCY = 2 then
+        if a_rd_en_i = '1' then
+          a_rd_data <= ram_v(to_integer(a_addr_i));
+        end if;
+        a_rd_data_o <= a_rd_data;
+      else
+        assert false;
       end if;
+
       if a_wr_en_i = '1' then
         ram_v(to_integer(a_addr_i)) := a_wr_data_i;
       end if;
@@ -81,9 +96,19 @@ begin
   b_proc : process (b_clk_i)
   begin
     if rising_edge(b_clk_i) then
-      if b_rd_en_i = '1' then
-        b_rd_data_o <= ram_v(to_integer(b_addr_i));
+      if G_B_LATENCY = 1 then
+        if b_rd_en_i = '1' then
+          b_rd_data_o <= ram_v(to_integer(b_addr_i));
+        end if;
+      elsif G_B_LATENCY = 2 then
+        if b_rd_en_i = '1' then
+          b_rd_data <= ram_v(to_integer(b_addr_i));
+        end if;
+        b_rd_data_o <= b_rd_data;
+      else
+        assert false;
       end if;
+
       if b_wr_en_i = '1' then
         ram_v(to_integer(b_addr_i)) := b_wr_data_i;
       end if;

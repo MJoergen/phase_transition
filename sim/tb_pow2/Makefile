@@ -9,7 +9,7 @@ SRC += $(SIM_SRC_DIR)/tb_pow2.vhd
 DUT = pow2
 
 # Test duration
-STOP_TIME = 5000ns
+STOP_TIME = 6us
 
 # Test specific generics
 GENERIC += -gG_ACCURACY=4

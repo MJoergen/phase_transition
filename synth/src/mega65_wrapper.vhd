@@ -23,7 +23,8 @@ entity mega65_wrapper is
     vga_rst_i         : in    std_logic;
     vga_ram_addr_o    : out   std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
     vga_ram_rd_data_i : in    std_logic;
-    vga_step_o        : out   std_logic;
+    vga_key_valid_o   : out   std_logic;
+    vga_key_code_o    : out   integer range 0 to 79;
 
     -- Connect to MEGA65 I/Os
     kb_io0_o          : out   std_logic;
@@ -43,67 +44,48 @@ end entity mega65_wrapper;
 
 architecture synthesis of mega65_wrapper is
 
-  constant C_VIDEO_MODE : video_modes_type                   := C_VIDEO_MODE_720_576_50;
+  constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 
-  signal   powerled_col      : std_logic_vector(23 downto 0) := x"336699";
-  signal   driveled_steady   : std_logic                     := '1';
-  signal   driveled_blinking : std_logic                     := '0';
-  signal   driveled_col      : std_logic_vector(23 downto 0) := x"996633";
+  signal   vga_char   : std_logic_vector(7 downto 0);
+  signal   vga_colors : std_logic_vector(15 downto 0);
+  signal   vga_invert : std_logic;
+  signal   vga_de     : std_logic;
+  signal   vga_hcount : std_logic_vector(C_VIDEO_MODE.PIX_SIZE - 1 downto 0);
+  signal   vga_hs     : std_logic;
+  signal   vga_rgb    : std_logic_vector(7 downto 0);
+  signal   vga_vcount : std_logic_vector(C_VIDEO_MODE.PIX_SIZE - 1 downto 0);
+  signal   vga_vs     : std_logic;
+  signal   vga_x      : std_logic_vector(7 downto 0);
+  signal   vga_y      : std_logic_vector(7 downto 0);
 
-  signal   vga_char     : std_logic_vector(7 downto 0);
-  signal   vga_colors   : std_logic_vector(15 downto 0);
-  signal   vga_invert   : std_logic;
-  signal   vga_de       : std_logic;
-  signal   vga_hcount   : std_logic_vector(C_VIDEO_MODE.PIX_SIZE - 1 downto 0);
-  signal   vga_hs       : std_logic;
-  signal   vga_rgb      : std_logic_vector(7 downto 0);
-  signal   vga_vcount   : std_logic_vector(C_VIDEO_MODE.PIX_SIZE - 1 downto 0);
-  signal   vga_vs       : std_logic;
-  signal   vga_x        : std_logic_vector(7 downto 0);
-  signal   vga_y        : std_logic_vector(7 downto 0);
-  signal   vga_return_d : std_logic;
-  signal   vga_return   : std_logic;
+  signal   vga_key_num       : integer range 0 to 79;
+  signal   vga_key_pressed_n : std_logic;
 
 begin
 
   ----------------------------
-  -- Keyboard
+  -- Keyboard (in VGA clock domain)
   ----------------------------
 
-  mega65kbd_to_matrix_inst : entity work.mega65kbd_to_matrix
-    generic map (
-      G_CLOCK_KHZ => C_VIDEO_MODE.CLK_KHZ
-    )
+  m2m_keyb_inst : entity work.m2m_keyb
     port map (
-      clk_i               => vga_clk_i,
-      rst_i               => vga_rst_i,
-      powerled_steady_i   => '1',
-      powerled_col_i      => powerled_col,
-      driveled_steady_i   => driveled_steady,
-      driveled_blinking_i => driveled_blinking,
-      driveled_col_i      => driveled_col,
-      matrix_ram_offset_o => open,
-      matrix_dia_o        => open,
-      keyram_wea_o        => open,
-      delete_o            => open,
-      return_o            => vga_return,
-      fastkey_o           => open,
-      restore_n_o         => open,
-      capslock_n_o        => open,
-      leftkey_o           => open,
-      upkey_o             => open,
-      kio8_o              => kb_io0_o,
-      kio9_o              => kb_io1_o,
-      kio10_i             => kb_io2_i
-    ); -- mega65kbd_to_matrix_inst : entity work.mega65kbd_to_matrix
+      clk_main_i       => vga_clk_i,
+      clk_main_speed_i => C_VIDEO_MODE.CLK_KHZ * 1000,
+      kio8_o           => kb_io0_o,
+      kio9_o           => kb_io1_o,
+      kio10_i          => kb_io2_i,
+      enable_core_i    => '1',
+      key_num_o        => vga_key_num,
+      key_pressed_n_o  => vga_key_pressed_n,
+      power_led_i      => '0',
+      power_led_col_i  => (others => '0'),
+      drive_led_i      => '0',
+      drive_led_col_i  => (others => '0'),
+      qnice_keys_n_o   => open
+    ); -- m2m_keyb_inst : entity work.m2m_keyb
 
-  step_proc : process (vga_clk_i)
-  begin
-    if rising_edge(vga_clk_i) then
-      vga_return_d <= vga_return;
-      vga_step_o   <= vga_return_d and not vga_return;
-    end if;
-  end process step_proc;
+  vga_key_valid_o <= not vga_key_pressed_n;
+  vga_key_code_o  <= vga_key_num;
 
 
   ----------------------------
