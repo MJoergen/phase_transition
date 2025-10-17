@@ -1,0 +1,140 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Oct 17 11:14:33 2025
+[*]
+[dumpfile] "/home/mfj/git/PRIVATE/MJoergen/phase_transition/sim/tb_top/tb_top.ghw"
+[dumpfile_mtime] "Fri Oct 17 11:14:00 2025"
+[dumpfile_size] 235883662
+[savefile] "/home/mfj/git/PRIVATE/MJoergen/phase_transition/sim/tb_top/tb_top.gtkw"
+[timestart] 0
+[size] 1591 1001
+[pos] -1 -1
+*-36.682034 188773332014 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_top.
+[treeopen] top.tb_top.top_inst.
+[treeopen] top.tb_top.top_inst.mega65_wrapper_inst.
+[sst_width] 379
+[signals_width] 251
+[sst_expanded] 1
+[sst_vpaned_height] 283
+@c00200
+-top
+@28
+top.tb_top.top_inst.sys_clk_i
+top.tb_top.top_inst.sys_rst_i
+top.tb_top.top_inst.kb_io0_o
+top.tb_top.top_inst.kb_io1_o
+top.tb_top.top_inst.kb_io2_i
+top.tb_top.top_inst.vdac_blank_n_o
+top.tb_top.top_inst.vdac_clk_o
+top.tb_top.top_inst.vdac_psave_n_o
+top.tb_top.top_inst.vdac_sync_n_o
+top.tb_top.top_inst.vga_hs_o
+top.tb_top.top_inst.vga_vs_o
+@22
+#{top.tb_top.top_inst.vga_blue_o[7:0]} top.tb_top.top_inst.vga_blue_o[7] top.tb_top.top_inst.vga_blue_o[6] top.tb_top.top_inst.vga_blue_o[5] top.tb_top.top_inst.vga_blue_o[4] top.tb_top.top_inst.vga_blue_o[3] top.tb_top.top_inst.vga_blue_o[2] top.tb_top.top_inst.vga_blue_o[1] top.tb_top.top_inst.vga_blue_o[0]
+#{top.tb_top.top_inst.vga_green_o[7:0]} top.tb_top.top_inst.vga_green_o[7] top.tb_top.top_inst.vga_green_o[6] top.tb_top.top_inst.vga_green_o[5] top.tb_top.top_inst.vga_green_o[4] top.tb_top.top_inst.vga_green_o[3] top.tb_top.top_inst.vga_green_o[2] top.tb_top.top_inst.vga_green_o[1] top.tb_top.top_inst.vga_green_o[0]
+#{top.tb_top.top_inst.vga_red_o[7:0]} top.tb_top.top_inst.vga_red_o[7] top.tb_top.top_inst.vga_red_o[6] top.tb_top.top_inst.vga_red_o[5] top.tb_top.top_inst.vga_red_o[4] top.tb_top.top_inst.vga_red_o[3] top.tb_top.top_inst.vga_red_o[2] top.tb_top.top_inst.vga_red_o[1] top.tb_top.top_inst.vga_red_o[0]
+@1401200
+-top
+@c00200
+-video_chars
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_clk_i
+@24
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[10:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[10] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[9] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[8] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_hcount_i[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[10:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[10] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[9] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[8] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_vcount_i[0]
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_blank_i
+@22
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_rgb_o[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_rgb_o[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_rgb_o[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_rgb_o[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_rgb_o[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_rgb_o[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_rgb_o[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_rgb_o[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_rgb_o[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_x_o[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_x_o[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_x_o[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_x_o[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_x_o[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_x_o[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_x_o[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_x_o[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_x_o[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_y_o[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_y_o[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_y_o[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_y_o[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_y_o[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_y_o[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_y_o[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_y_o[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_y_o[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_char_i[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_char_i[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_char_i[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_char_i[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_char_i[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_char_i[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_char_i[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_char_i[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_char_i[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[15:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[15] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[14] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[13] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[12] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[11] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[10] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[9] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[8] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.video_colors_i[0]
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.black_0
+@420
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_col_0
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_row_0
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pix_col_0
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pix_row_0
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.black_1
+@420
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_col_1
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_row_1
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pix_col_1
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pix_row_1
+@22
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_1[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_1[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_1[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_1[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_1[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_1[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_1[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_1[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_1[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[15:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[15] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[14] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[13] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[12] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[11] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[10] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[9] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[8] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_1[0]
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.black_2
+@22
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[63:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[63] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[62] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[61] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[60] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[59] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[58] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[57] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[56] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[55] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[54] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[53] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[52] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[51] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[50] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[49] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[48] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[47] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[46] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[45] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[44] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[43] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[42] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[41] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[40] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[39] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[38] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[37] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[36] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[35] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[34] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[33] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[32] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[31] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[30] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[29] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[28] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[27] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[26] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[25] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[24] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[23] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[22] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[21] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[20] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[19] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[18] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[17] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[16] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[15] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[14] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[13] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[12] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[11] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[10] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[9] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[8] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_2[0]
+@420
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_col_2
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.char_row_2
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pix_col_2
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pix_row_2
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.bitmap_index_2
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pix_2
+@22
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[15:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[15] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[14] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[13] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[12] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[11] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[10] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[9] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[8] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.colors_2[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pixel_3[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pixel_3[7] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pixel_3[6] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pixel_3[5] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pixel_3[4] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pixel_3[3] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pixel_3[2] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pixel_3[1] top.tb_top.top_inst.mega65_wrapper_inst.video_chars_inst.pixel_3[0]
+@1401200
+-video_chars
+@800200
+-mega65_wrapper
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.vga_clk_i
+top.tb_top.top_inst.mega65_wrapper_inst.vga_rst_i
+@22
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[15:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[15] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[14] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[13] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[12] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[11] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[10] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[9] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[8] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_addr_o[0]
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.vga_ram_rd_data_i
+@29
+top.tb_top.top_inst.mega65_wrapper_inst.vga_key_valid_o
+@420
+top.tb_top.top_inst.mega65_wrapper_inst.vga_key_code_o
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.kb_io0_o
+top.tb_top.top_inst.mega65_wrapper_inst.kb_io1_o
+top.tb_top.top_inst.mega65_wrapper_inst.kb_io2_i
+top.tb_top.top_inst.mega65_wrapper_inst.vdac_blank_n_o
+top.tb_top.top_inst.mega65_wrapper_inst.vdac_clk_o
+top.tb_top.top_inst.mega65_wrapper_inst.vdac_psave_n_o
+top.tb_top.top_inst.mega65_wrapper_inst.vdac_sync_n_o
+top.tb_top.top_inst.mega65_wrapper_inst.vga_hs_o
+top.tb_top.top_inst.mega65_wrapper_inst.vga_vs_o
+@22
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_blue_o[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_blue_o[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_blue_o[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_blue_o[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_blue_o[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_blue_o[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_blue_o[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_blue_o[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_blue_o[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_green_o[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_green_o[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_green_o[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_green_o[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_green_o[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_green_o[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_green_o[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_green_o[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_green_o[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_red_o[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_red_o[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_red_o[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_red_o[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_red_o[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_red_o[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_red_o[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_red_o[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_red_o[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_char[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_char[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_char[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_char[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_char[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_char[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_char[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_char[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_char[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[15:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[15] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[14] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[13] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[12] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[11] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[10] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[9] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[8] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_colors[0]
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.vga_de
+@22
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[10:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[10] top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[9] top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[8] top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_hcount[0]
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.vga_hs
+@22
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_rgb[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_rgb[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_rgb[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_rgb[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_rgb[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_rgb[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_rgb[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_rgb[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_rgb[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[10:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[10] top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[9] top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[8] top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_vcount[0]
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.vga_vs
+@22
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_x[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_x[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_x[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_x[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_x[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_x[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_x[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_x[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_x[0]
+#{top.tb_top.top_inst.mega65_wrapper_inst.vga_y[7:0]} top.tb_top.top_inst.mega65_wrapper_inst.vga_y[7] top.tb_top.top_inst.mega65_wrapper_inst.vga_y[6] top.tb_top.top_inst.mega65_wrapper_inst.vga_y[5] top.tb_top.top_inst.mega65_wrapper_inst.vga_y[4] top.tb_top.top_inst.mega65_wrapper_inst.vga_y[3] top.tb_top.top_inst.mega65_wrapper_inst.vga_y[2] top.tb_top.top_inst.mega65_wrapper_inst.vga_y[1] top.tb_top.top_inst.mega65_wrapper_inst.vga_y[0]
+@420
+top.tb_top.top_inst.mega65_wrapper_inst.vga_key_num
+@28
+top.tb_top.top_inst.mega65_wrapper_inst.vga_key_pressed_n
+@1000200
+-mega65_wrapper
+[pattern_trace] 1
+[pattern_trace] 0

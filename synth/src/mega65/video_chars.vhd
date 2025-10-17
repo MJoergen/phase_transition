@@ -33,28 +33,25 @@ architecture synthesis of video_chars is
 
   -- Stage 0
   signal  black_0    : std_logic;
-  signal  char_col_0 : integer range 0 to G_VIDEO_MODE.H_MAX / C_SCALING_FACTOR - 1;
-  signal  char_row_0 : integer range 0 to G_VIDEO_MODE.V_MAX / C_SCALING_FACTOR - 1;
+  signal  char_col_0 : integer range 0 to G_VIDEO_MODE.H_MAX / C_SCALING_FACTOR;
+  signal  char_row_0 : integer range 0 to G_VIDEO_MODE.V_MAX / C_SCALING_FACTOR;
   signal  pix_col_0  : integer range 0 to 7;
   signal  pix_row_0  : integer range 0 to 7;
 
   -- Stage 1
   signal  black_1       : std_logic;
-  signal  char_col_1    : integer range 0 to G_VIDEO_MODE.H_MAX / C_SCALING_FACTOR - 1;
-  signal  char_row_1    : integer range 0 to G_VIDEO_MODE.V_MAX / C_SCALING_FACTOR - 1;
+  signal  char_col_1    : integer range 0 to G_VIDEO_MODE.H_MAX / C_SCALING_FACTOR;
+  signal  char_row_1    : integer range 0 to G_VIDEO_MODE.V_MAX / C_SCALING_FACTOR;
   signal  pix_col_1     : integer range 0 to 7;
   signal  pix_row_1     : integer range 0 to 7;
-  signal  nibble_1      : std_logic_vector(3 downto 0);
-  signal  char_nibble_1 : std_logic_vector(7 downto 0);
-  signal  char_txt_1    : std_logic_vector(7 downto 0);
   signal  char_1        : std_logic_vector(7 downto 0);
   signal  colors_1      : std_logic_vector(15 downto 0);
 
   -- Stage 2
   signal  black_2        : std_logic;
   signal  bitmap_2       : BITMAP_TYPE;
-  signal  char_col_2     : integer range 0 to G_VIDEO_MODE.H_MAX / C_SCALING_FACTOR - 1;
-  signal  char_row_2     : integer range 0 to G_VIDEO_MODE.V_MAX / C_SCALING_FACTOR - 1;
+  signal  char_col_2     : integer range 0 to G_VIDEO_MODE.H_MAX / C_SCALING_FACTOR;
+  signal  char_row_2     : integer range 0 to G_VIDEO_MODE.V_MAX / C_SCALING_FACTOR;
   signal  pix_col_2      : integer range 0 to 7;
   signal  pix_row_2      : integer range 0 to 7;
   signal  bitmap_index_2 : integer range 0 to 63;

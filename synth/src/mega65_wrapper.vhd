@@ -45,10 +45,11 @@ end entity mega65_wrapper;
 architecture synthesis of mega65_wrapper is
 
   constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
+  constant C_POS_X      : natural          := 0;
+  constant C_POS_Y      : natural          := 0;
 
   signal   vga_char   : std_logic_vector(7 downto 0);
   signal   vga_colors : std_logic_vector(15 downto 0);
-  signal   vga_invert : std_logic;
   signal   vga_de     : std_logic;
   signal   vga_hcount : std_logic_vector(C_VIDEO_MODE.PIX_SIZE - 1 downto 0);
   signal   vga_hs     : std_logic;
@@ -146,11 +147,9 @@ begin
   end process vga_proc;
 
   vga_char_proc : process (vga_clk_i)
-    constant C_POS_X : natural := 10;
-    constant C_POS_Y : natural := 10;
-    variable col_v   : natural range 0 to 7;
-    variable row_v   : natural range 0 to G_GRID_SIZE - 1;
-    variable idx_v   : natural range 0 to G_GRID_SIZE * 8 - 1;
+    variable col_v : natural range 0 to 7;
+    variable row_v : natural range 0 to G_GRID_SIZE - 1;
+    variable idx_v : natural range 0 to G_GRID_SIZE * 8 - 1;
 
     pure function to_ascii (
       arg : std_logic_vector(3 downto 0)

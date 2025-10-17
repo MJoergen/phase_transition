@@ -55,7 +55,7 @@ end entity m2m_keyb;
 architecture beh of m2m_keyb is
 
   signal matrix_col     : std_logic_vector(7 downto 0);
-  signal matrix_col_idx : integer range 0 to 9          := 0;
+  signal matrix_col_idx : integer range 0 to 15          := 0;
   signal key_num        : integer range 0 to 79;
   signal key_status_n   : std_logic;
   signal keys_n         : std_logic_vector(15 downto 0) := x"FFFF"; -- low active, "no key pressed"
