@@ -91,9 +91,9 @@ begin
       variable neighbor_cnt_v : natural range 0 to 4;
       variable exp_prob_v   : real;
     begin
---      report "Verify: x=" & to_string(x) &
---             ", y=" & to_string(y) &
---             ", c=" & to_string(c);
+      --      report "Verify: x=" & to_string(x) &
+      --             ", y=" & to_string(y) &
+      --             ", c=" & to_string(c);
       neighbor_cnt_v := 0;
       for i in 1 to 4 loop
         if c(i) = '1' then
@@ -102,32 +102,32 @@ begin
       end loop;
 
       exp_prob_v    := calc_exp_prob(neighbor_cnt_v, to_integer(c(0 downto 0)));
---      report "neighbor_cnt_v=" & to_string(neighbor_cnt_v) &
---             ", cell_v=" & to_string(c(0)) &
---             " -> exp_prob_v = " & to_string(exp_prob_v);
+      --      report "neighbor_cnt_v=" & to_string(neighbor_cnt_v) &
+      --             ", cell_v=" & to_string(c(0)) &
+      --             " -> exp_prob_v = " & to_string(exp_prob_v);
 
       tb_addr_x     <= std_logic_vector(to_unsigned(x, G_ADDR_BITS));
       tb_addr_y     <= std_logic_vector(to_unsigned(y, G_ADDR_BITS));
       tb_wr_en      <= '1';
       tb_wr_data    <= c(0);
       wait until rising_edge(clk);
-      tb_addr_x     <= std_logic_vector(to_unsigned(x, G_ADDR_BITS) + 1);
+      tb_addr_x     <= std_logic_vector(to_unsigned((x+1) mod G_GRID_SIZE, G_ADDR_BITS));
       tb_addr_y     <= std_logic_vector(to_unsigned(y, G_ADDR_BITS));
       tb_wr_en      <= '1';
       tb_wr_data    <= c(1);
       wait until rising_edge(clk);
-      tb_addr_x     <= std_logic_vector(to_unsigned(x, G_ADDR_BITS) - 1);
+      tb_addr_x     <= std_logic_vector(to_unsigned((x-1) mod G_GRID_SIZE, G_ADDR_BITS));
       tb_addr_y     <= std_logic_vector(to_unsigned(y, G_ADDR_BITS));
       tb_wr_en      <= '1';
       tb_wr_data    <= c(2);
       wait until rising_edge(clk);
       tb_addr_x     <= std_logic_vector(to_unsigned(x, G_ADDR_BITS));
-      tb_addr_y     <= std_logic_vector(to_unsigned(y, G_ADDR_BITS) + 1);
+      tb_addr_y     <= std_logic_vector(to_unsigned((y+1) mod G_GRID_SIZE, G_ADDR_BITS));
       tb_wr_en      <= '1';
       tb_wr_data    <= c(3);
       wait until rising_edge(clk);
       tb_addr_x     <= std_logic_vector(to_unsigned(x, G_ADDR_BITS));
-      tb_addr_y     <= std_logic_vector(to_unsigned(y, G_ADDR_BITS) - 1);
+      tb_addr_y     <= std_logic_vector(to_unsigned((y-1) mod G_GRID_SIZE, G_ADDR_BITS));
       tb_wr_en      <= '1';
       tb_wr_data    <= c(4);
       wait until rising_edge(clk);
@@ -171,10 +171,10 @@ begin
     report "Test started";
 
     for i in 0 to 15 loop
-      verify(4, 4, to_unsigned(i, 4) & "0", 1.05, '0');
-      verify(4, 4, to_unsigned(i, 4) & "0", 0.95, '1');
-      verify(4, 4, to_unsigned(i, 4) & "1", 1.05, '1');
-      verify(4, 4, to_unsigned(i, 4) & "1", 0.95, '0');
+      verify(0, 0, to_unsigned(i, 4) & "0", 1.05, '0');
+      verify(0, G_GRID_SIZE - 1, to_unsigned(i, 4) & "0", 0.95, '1');
+      verify(G_GRID_SIZE - 1, 0, to_unsigned(i, 4) & "1", 1.05, '1');
+      verify(G_GRID_SIZE - 1, G_GRID_SIZE - 1, to_unsigned(i, 4) & "1", 0.95, '0');
     end loop;
 
     report "Test finished";
