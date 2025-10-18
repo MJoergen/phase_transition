@@ -17,6 +17,7 @@ entity core is
     temperature_i  : in    ufixed(-1 downto -G_ACCURACY); -- [0, 1[
     neg_chem_pot_i : in    ufixed(1 downto -G_ACCURACY);  -- [0, 4[
     step_i         : in    std_logic;
+    count_o        : out   natural;
     ram_addr_o     : out   std_logic_vector(2 * G_ADDR_BITS - 1 downto 0);
     ram_wr_data_o  : out   std_logic;
     ram_rd_data_i  : in    std_logic;
@@ -68,6 +69,7 @@ begin
 
         when IDLE_ST =>
           if step_i = '1' and single_ready = '1' then
+            count_o      <= count_o + 1;
             -- Get two random values in the range [0, 1[.
             rand_x_v     := to_ufixed(rand_output_d(G_ADDR_BITS + 20 - 1 downto 20), rand_x_v);
             rand_y_v     := to_ufixed(rand_output_d(G_ADDR_BITS + 10 - 1 downto 10), rand_y_v);
@@ -97,8 +99,9 @@ begin
 
       if rst_i = '1' then
         single_valid <= '0';
-        state <= INIT_ST;
-        cnt   <= 10;
+        state        <= INIT_ST;
+        cnt          <= 10;
+        count_o      <= 0;
       end if;
     end if;
   end process state_proc;

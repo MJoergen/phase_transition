@@ -21,6 +21,8 @@ SRC += $(PLATFORM_SRC_DIR)/mega65_wrapper.vhd
 SRC += $(PLATFORM_SRC_DIR)/tdp_ram.vhd
 SRC += $(PLATFORM_SRC_DIR)/top.vhd
 SRC += $(PLATFORM_SRC_DIR)/controller.vhd
+SRC += $(PLATFORM_SRC_DIR)/divexact.vhd
+SRC += $(PLATFORM_SRC_DIR)/slv_to_dec.vhd
 
 # Top level entity
 TOP = top

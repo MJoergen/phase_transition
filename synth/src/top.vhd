@@ -51,6 +51,7 @@ architecture synthesis of top is
   signal   core_ram_wr_en    : std_logic;
   signal   core_step         : std_logic;
   signal   core_valid        : std_logic;
+  signal   core_count        : natural;
 
   signal   vga_clk          : std_logic;
   signal   vga_rst          : std_logic;
@@ -59,6 +60,7 @@ architecture synthesis of top is
   signal   vga_key_valid    : std_logic;
   signal   vga_key_code     : integer range 0 to 79;
   signal   vga_step         : std_logic;
+  signal   vga_count        : std_logic_vector(27 downto 0);
   signal   vga_valid        : std_logic;
   signal   vga_temperature  : ufixed(-1 downto -G_ACCURACY);
   signal   vga_neg_chem_pot : ufixed(1 downto -G_ACCURACY);
@@ -101,6 +103,7 @@ begin
       temperature_i  => to_ufixed(core_temperature, - 1, - G_ACCURACY),
       neg_chem_pot_i => to_ufixed(core_neg_chem_pot, 1, - G_ACCURACY),
       step_i         => core_step,
+      count_o        => core_count,
       ram_addr_o     => core_ram_addr,
       ram_wr_data_o  => core_ram_wr_data,
       ram_rd_data_i  => core_ram_rd_data,
@@ -157,6 +160,7 @@ begin
       vga_ram_rd_data_i => vga_ram_rd_data,
       vga_key_valid_o   => vga_key_valid,
       vga_key_code_o    => vga_key_code,
+      vga_count_i       => vga_count,
       kb_io0_o          => kb_io0_o,
       kb_io1_o          => kb_io1_o,
       kb_io2_i          => kb_io2_i,
@@ -213,6 +217,22 @@ begin
 
   vga_in                                <= to_slv(vga_temperature) & to_slv(vga_neg_chem_pot);
   (core_temperature, core_neg_chem_pot) <= core_out;
+
+
+  xpm_cdc_array_single_c2v_inst : component xpm_cdc_array_single
+    generic map (
+      DEST_SYNC_FF   => 2,
+      INIT_SYNC_FF   => 0,
+      SIM_ASSERT_CHK => 1,
+      SRC_INPUT_REG  => 1,
+      WIDTH          => 28
+    )
+    port map (
+      src_clk  => core_clk,
+      src_in   => std_logic_vector(to_unsigned(core_count, 28)),
+      dest_clk => vga_clk,
+      dest_out => vga_count
+    ); -- xpm_cdc_array_single_c2v_inst : component xpm_cdc_array_single
 
 
   xpm_cdc_pulse_step_inst : component xpm_cdc_pulse
