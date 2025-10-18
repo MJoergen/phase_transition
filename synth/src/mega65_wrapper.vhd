@@ -48,25 +48,26 @@ architecture synthesis of mega65_wrapper is
   constant C_POS_X      : natural          := 0;
   constant C_POS_Y      : natural          := 0;
 
-  signal   vga_char   : std_logic_vector(7 downto 0);
-  signal   vga_colors : std_logic_vector(15 downto 0);
-  signal   vga_de     : std_logic;
-  signal   vga_hcount : std_logic_vector(C_VIDEO_MODE.PIX_SIZE - 1 downto 0);
-  signal   vga_hs     : std_logic;
-  signal   vga_rgb    : std_logic_vector(7 downto 0);
-  signal   vga_vcount : std_logic_vector(C_VIDEO_MODE.PIX_SIZE - 1 downto 0);
-  signal   vga_vs     : std_logic;
-  signal   vga_x      : std_logic_vector(7 downto 0);
-  signal   vga_y      : std_logic_vector(7 downto 0);
-
   signal   vga_key_num       : integer range 0 to 79;
   signal   vga_key_pressed_n : std_logic;
 
+  signal   vga_hcount : std_logic_vector(C_VIDEO_MODE.PIX_SIZE - 1 downto 0);
+  signal   vga_vcount : std_logic_vector(C_VIDEO_MODE.PIX_SIZE - 1 downto 0);
+  signal   vga_de     : std_logic;
+  signal   vga_hs     : std_logic;
+  signal   vga_vs     : std_logic;
+  --
+  signal   vga_char   : std_logic_vector(7 downto 0);
+  signal   vga_colors : std_logic_vector(15 downto 0);
+  signal   vga_rgb    : std_logic_vector(7 downto 0);
+  signal   vga_x      : std_logic_vector(7 downto 0);
+  signal   vga_y      : std_logic_vector(7 downto 0);
+
 begin
 
-  ----------------------------
+  -------------------------------------------
   -- Keyboard (in VGA clock domain)
-  ----------------------------
+  -------------------------------------------
 
   m2m_keyb_inst : entity work.m2m_keyb
     port map (
@@ -78,10 +79,10 @@ begin
       enable_core_i    => '1',
       key_num_o        => vga_key_num,
       key_pressed_n_o  => vga_key_pressed_n,
-      power_led_i      => '0',
-      power_led_col_i  => (others => '0'),
-      drive_led_i      => '0',
-      drive_led_col_i  => (others => '0'),
+      power_led_i      => '1',
+      power_led_col_i  => X"CC4444",
+      drive_led_i      => '1',
+      drive_led_col_i  => X"44CC44",
       qnice_keys_n_o   => open
     ); -- m2m_keyb_inst : entity work.m2m_keyb
 
@@ -89,9 +90,9 @@ begin
   vga_key_code_o  <= vga_key_num;
 
 
-  ----------------------------
+  -------------------------------------------
   -- VGA
-  ----------------------------
+  -------------------------------------------
 
   video_sync_inst : entity work.video_sync
     generic map (
@@ -110,41 +111,6 @@ begin
 
   vga_ram_addr_o(2 * G_ADDR_BITS - 1 downto G_ADDR_BITS) <= vga_vcount(G_SCALING_BITS + G_ADDR_BITS - 1 downto G_SCALING_BITS);
   vga_ram_addr_o(G_ADDR_BITS - 1 downto 0)               <= vga_hcount(G_SCALING_BITS + G_ADDR_BITS - 1 downto G_SCALING_BITS);
-
-  video_chars_inst : entity work.video_chars
-    generic map (
-      G_SCALING    => G_SCALING_BITS,
-      G_FONT_FILE  => "font8x8.txt",
-      G_VIDEO_MODE => C_VIDEO_MODE
-    )
-    port map (
-      video_clk_i    => vga_clk_i,
-      video_hcount_i => vga_hcount,
-      video_vcount_i => vga_vcount,
-      video_blank_i  => not vga_de,
-      video_rgb_o    => vga_rgb,
-      video_x_o      => vga_x,
-      video_y_o      => vga_y,
-      video_char_i   => vga_char,
-      video_colors_i => vga_colors
-    ); -- video_chars_inst : entity work.video_chars
-
-  vga_proc : process (vga_clk_i)
-  begin
-    if rising_edge(vga_clk_i) then
-      vga_vs_o    <= vga_vs;
-      vga_hs_o    <= vga_hs;
-      vga_blue_o  <= (others => '0');
-      vga_green_o <= (others => '0');
-      vga_red_o   <= (others => '0');
-
-      if vga_de = '1' then
-        vga_blue_o  <= vga_rgb;
-        vga_green_o <= vga_rgb;
-        vga_red_o   <= vga_rgb;
-      end if;
-    end if;
-  end process vga_proc;
 
   vga_char_proc : process (vga_clk_i)
     variable col_v : natural range 0 to 7;
@@ -175,8 +141,48 @@ begin
         vga_colors <= x"44BB";
         vga_char   <= "0011000" & vga_ram_rd_data_i;
       end if;
+      if vga_x >= C_POS_X and vga_x < C_POS_X + G_GRID_SIZE and
+         vga_y = C_POS_Y + G_GRID_SIZE then
+        vga_colors <= x"2DD2";
+        vga_char   <= X"41" + vga_x - C_POS_X;
+      end if;
     end if;
   end process vga_char_proc;
+
+  video_chars_inst : entity work.video_chars
+    generic map (
+      G_SCALING    => G_SCALING_BITS,
+      G_FONT_FILE  => "font8x8.txt",
+      G_VIDEO_MODE => C_VIDEO_MODE
+    )
+    port map (
+      video_clk_i    => vga_clk_i,
+      video_hcount_i => vga_hcount,
+      video_vcount_i => vga_vcount,
+      video_blank_i  => not vga_de,
+      video_rgb_o    => vga_rgb,
+      video_x_o      => vga_x,
+      video_y_o      => vga_y,
+      video_char_i   => vga_char,
+      video_colors_i => vga_colors
+    ); -- video_chars_inst : entity work.video_chars
+
+  vga_proc : process (vga_clk_i)
+  begin
+    if rising_edge(vga_clk_i) then
+      vga_vs_o    <= vga_vs;
+      vga_hs_o    <= vga_hs;
+      vga_blue_o  <= (others => '0');
+      vga_green_o <= (others => '0');
+      vga_red_o   <= (others => '0');
+
+      if vga_de = '1' then
+        vga_red_o   <= vga_rgb(7 downto 5) & vga_rgb(7 downto 5) & vga_rgb(7 downto 6);
+        vga_green_o <= vga_rgb(4 downto 2) & vga_rgb(4 downto 2) & vga_rgb(4 downto 3);
+        vga_blue_o  <= vga_rgb(1 downto 0) & vga_rgb(1 downto 0) & vga_rgb(1 downto 0) & vga_rgb(1 downto 0);
+      end if;
+    end if;
+  end process vga_proc;
 
   oddr_inst : component oddr
     port map (

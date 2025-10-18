@@ -106,15 +106,15 @@ begin
   coef_proc : process (clk_i)
   begin
     if rising_edge(clk_i) then
-      neg_chem_pot <= neg_chem_pot_i;
-      temperature  <= temperature_i;
-
       if valid_i = '1' then
-        -- This generates a huge combinatorial network, but since this is not timing
-        -- critical, a set_multicycle_path timing exception is used.
-        single_coef_e <= resize(C_LN2 / temperature, single_coef_e);
-        single_coef_n <= resize(C_LN2 * neg_chem_pot / temperature_i, single_coef_n);
+        neg_chem_pot <= neg_chem_pot_i;
+        temperature  <= temperature_i;
       end if;
+
+      -- This generates a huge combinatorial network, but since this is not timing
+      -- critical, a set_multicycle_path timing exception is used.
+      single_coef_e <= resize(C_LN2 / temperature, single_coef_e);
+      single_coef_n <= resize(single_coef_e * neg_chem_pot, single_coef_n);
     end if;
   end process coef_proc;
 

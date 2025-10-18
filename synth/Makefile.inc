@@ -17,7 +17,7 @@ SRC_DIR = ../src
 ################## Don't change anything below here ******************************
 
 # Specify install location of the AMD Vivado tool
-VIVADO_DIR = /opt/Xilinx/Vivado/2024.1
+VIVADO_DIR = /opt/Xilinx/2025.1/Vivado
 
 PART = xc7a200tfbg484-2
 

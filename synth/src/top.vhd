@@ -196,7 +196,7 @@ begin
   -- Clock Domain Crossings
   --------------------------------------------------
 
-  xpm_cdc_array_single_inst : component xpm_cdc_array_single
+  xpm_cdc_array_single_v2c_inst : component xpm_cdc_array_single
     generic map (
       DEST_SYNC_FF   => 2,
       INIT_SYNC_FF   => 0,
@@ -209,7 +209,7 @@ begin
       src_in   => vga_in,
       dest_clk => core_clk,
       dest_out => core_out
-    ); -- xpm_cdc_array_single_inst : component xpm_cdc_array_single
+    ); -- xpm_cdc_array_single_v2c_inst : component xpm_cdc_array_single
 
   vga_in                                <= to_slv(vga_temperature) & to_slv(vga_neg_chem_pot);
   (core_temperature, core_neg_chem_pot) <= core_out;
